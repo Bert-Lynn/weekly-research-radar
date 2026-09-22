@@ -141,8 +141,8 @@ function setupProgress(total){
 
 async function load(){
   const [c,a]=await Promise.all([
-    fetch("data/current.json?v=20260922-v6",{cache:"no-store"}).then(r=>r.json()),
-    fetch("data/archive.json?v=20260922-v6",{cache:"no-store"}).then(r=>r.json())
+    fetch("data/current.json?v=20260922-v7",{cache:"no-store"}).then(r=>r.json()),
+    fetch("data/archive.json?v=20260922-v7",{cache:"no-store"}).then(r=>r.json())
   ]);
   currentWeek=c.week;
   const p0=c.papers.filter(p=>p.priority==="P0"),rest=c.papers.filter(p=>p.priority!=="P0");
