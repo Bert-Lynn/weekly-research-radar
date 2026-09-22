@@ -1,0 +1,158 @@
+{
+  "week": "2026-09-22",
+  "label": "Week 01 · 初始化期",
+  "updated_at": "2026-09-22",
+  "purpose": "根据未来科研方向、AI/OR 技术成长、论文产出和实习准备，筛选本周最值得读、最值得学、最值得做的内容，而不是复述已经完成的研究。",
+  "papers": [
+    {
+      "priority": "P0",
+      "lane": "直接竞争边界",
+      "title": "Airline planning under market uncertainty and passengers’ choice: Data-driven distributionally robust decomposition-based optimization framework",
+      "authors": "Ali Papi-RAD; Mir Saman Pishvaee; Hadi Sahebi",
+      "venue": "Transportation Research Part E: Logistics and Transportation Review",
+      "year": "2026 · online / assigned to Vol. 216",
+      "level": "交通运输、物流与运筹高水平期刊",
+      "url": "https://doi.org/10.1016/j.tre.2026.105158",
+      "summary": "联合优化航班频次、时刻表与机型指派，同时显式处理 O-D 市场需求不确定性和旅客选择。方法包含新的 AMNL 旅客选择模型、机器学习增强的数据驱动分布鲁棒优化，以及面向大规模问题的 Column-and-Constraint Generation。",
+      "why": "这是当前最需要优先读的直接竞争论文。它几乎把“旅客选择 → 市场需求不确定性 → 航班计划 → 机型指派”整条链串了起来，因此首先要判断你的行为机制、数据和预测到决策接口到底还能贡献什么。",
+      "focus": "优先读 Introduction、AMNL 及其精确线性化、ambiguity set 构造、基准模型与消融、数值实验中的 decision variables，以及 future work。",
+      "future": "它会直接影响你未来论文的创新定位：是强化行为理论，还是做概率需求预测，或进一步做 decision-focused / distributionally robust learning。",
+      "overlap": "重复风险高：航班频次、时刻表、机型指派、旅客选择和 O-D 需求不确定性都已进入同一优化框架。",
+      "gap": "可继续从更强行为机制、真实市场份额/票价数据、概率预测到 DRO 的数据接口、可解释性、行为不确定性与运行不确定性联动切入。"
+    },
+    {
+      "priority": "P0",
+      "lane": "AI + OR 核心",
+      "title": "Robust Decision-Focused Learning via Worst-Case Regret Minimization",
+      "authors": "Shoki Yamao; Ken Kobayashi; Ryo Matsui; Shota Nagai; Naoki Nishimura; Kazuhide Nakata",
+      "venue": "UAI 2026 · PMLR 337",
+      "year": "2026",
+      "level": "不确定性人工智能与概率机器学习高水平国际会议",
+      "url": "https://proceedings.mlr.press/v337/yamao26a.html",
+      "summary": "在 predict-then-optimize 框架下，不再只训练预测误差，而是直接最小化下游决策 regret。论文分别考虑观测误差和部署时的分布漂移，构造 worst-case regret 与 Wasserstein ambiguity set，并用 Danskin-based subgradients 训练。",
+      "why": "这非常接近你未来应该补的一条方法线：需求预测并不是为了 MAE 更低，而是为了航班计划、运力与机型指派的下游决策更好、更稳定。",
+      "focus": "重点看 regret 的定义、两类 uncertainty、Wasserstein ambiguity set、训练梯度推导和实验中的 robust baseline。",
+      "future": "非常适合做成一个 GitHub Demo：同一需求数据下比较 MSE 最优模型与 downstream regret 最优模型，验证“预测最准 ≠ 决策最好”。",
+      "overlap": "与现有论文直接重合低，但与未来“需求预测 → 优化”的升级方向高度一致。",
+      "gap": "将 robust DFL 迁移到航空 O-D 需求、频次/运力规划和机型指派，并与行为模型结合，仍有明显研究空间。"
+    },
+    {
+      "priority": "P0",
+      "lane": "需求不确定性",
+      "title": "Uncertainty-aware probabilistic travel demand prediction for mobility-on-demand services",
+      "authors": "Tao Peng; Jie Gao; Oded Cats",
+      "venue": "Transportation Research Part C: Emerging Technologies",
+      "year": "2025",
+      "level": "交通运输新技术与智能交通高水平期刊",
+      "url": "https://doi.org/10.1016/j.trc.2025.105383",
+      "summary": "提出 STGCN-VAE 概率需求预测框架：STGCN 学习时空依赖，VAE 生成多种未来需求场景，再用 KDE 构造完整概率分布和不确定性统计量。论文在四个真实 MoD 数据集上验证点预测和概率预测。",
+      "why": "如果未来还要把预测结果交给鲁棒航班计划，需求不确定性不能长期停留在经验性的低/中/高三个情景。这篇提供了一条从 point forecast 走向 probabilistic forecast 与 scenario generation 的成熟路线。",
+      "focus": "重点看概率预测评价指标、VAE 场景生成、KDE 分布构造、uncertainty calibration，以及如何证明生成场景有决策价值。",
+      "future": "可发展为航空 O-D 概率需求预测模块，也可以单独做成 AI 时空预测与 uncertainty quantification 项目。",
+      "overlap": "与现有需求预测主题中等重合，但应用对象和模型结构不同。",
+      "gap": "航空场景中的多机场竞争、旅客选择、票价/频次共同作用下的概率需求分布，以及这些分布如何进入下游 DRO，仍未解决。"
+    },
+    {
+      "priority": "P1",
+      "lane": "概率预测升级",
+      "title": "Uncertainty quantification for joint demand prediction of multi-modal ride-sourcing services using spatiotemporal Mixture-of-Expert neural network",
+      "authors": "Xiaobing Liu; Yu Duan; Yangli-ao Geng; Yun Wang; Qingyong Li; Xuedong Yan; Ziyou Gao",
+      "venue": "Transportation Research Part C: Emerging Technologies",
+      "year": "2026",
+      "level": "交通运输新技术与智能交通高水平期刊",
+      "url": "https://doi.org/10.1016/j.trc.2025.105507",
+      "summary": "用时空 Mixture-of-Experts 做多模式需求联合预测，并通过单调多分位数估计提供 prediction interval 与 uncertainty quantification，同时引入图结构学习提高跨城市适应性。",
+      "why": "它能帮你比较两条概率预测路线：生成式分布建模（VAE/KDE）和 quantile / interval forecasting。未来航空需求不一定必须用一种方式表达 uncertainty。",
+      "focus": "看 multi-quantile loss、interval calibration、MoE 分工机制和 joint multi-modal demand 的建模方式。",
+      "future": "可用于设计一个“不同 uncertainty representation 对下游 robust planning 的影响”实验。",
+      "overlap": "与现有研究直接重合较低。",
+      "gap": "不同不确定性表示方法是否会显著改变航空运力/机型决策，仍是非常值得验证的问题。"
+    },
+    {
+      "priority": "P1",
+      "lane": "行为 + AI",
+      "title": "Incorporating domain knowledge in deep neural networks for discrete choice models",
+      "authors": "Shadi Haj-Yahia; Omar Mansour; Tomer Toledo",
+      "venue": "Transportation Research Part C: Emerging Technologies",
+      "year": "2025",
+      "level": "交通运输新技术与智能交通高水平期刊",
+      "url": "https://doi.org/10.1016/j.trc.2025.105014",
+      "summary": "将行为与经济学先验作为惩罚约束注入 DNN 离散选择模型，并通过 pseudo-data 扩大约束覆盖范围。结果显示，约束后的模型虽可能略损失拟合度，但在未见数据上更稳定，也能避免不合理的经济行为。",
+      "why": "它给你一条比“传统行为模型 vs 黑箱 AI”更有前景的路线：保留行为理论，同时利用神经网络捕捉非线性和异质性。",
+      "focus": "看 domain constraint 数学形式、pseudo-data 生成、ASU-DNN、generalization 与 behavioral plausibility 的 trade-off。",
+      "future": "适合作为未来“行为理论 + AI”项目储备，尤其可以思考 RI、前景理论、Huff 先验如何转成可训练约束。",
+      "overlap": "和选择行为主题重合，但与现有 RI/PT 结构差异明显。",
+      "gap": "更复杂的行为机制如何转成可学习、可识别、可验证的 neural constraints，仍有空间。"
+    },
+    {
+      "priority": "P1",
+      "lane": "联合需求建模",
+      "title": "A joint, context-aware neural network-based travel demand and scheduling model",
+      "authors": "Joel Fredriksson; Anders Karlström",
+      "venue": "Transportation Research Part C: Emerging Technologies",
+      "year": "2026",
+      "level": "交通运输新技术与智能交通高水平期刊",
+      "url": "https://doi.org/10.1016/j.trc.2025.105512",
+      "summary": "用联合神经网络同时建模 activity、destination 和 mode choice，并通过 Global Context Module 汇总所有替代项信息，从而表达 substitution patterns 并缓解传统 MNL 的 IIA 限制。",
+      "why": "你的长期发展不应局限于单层 choice model。这篇展示了需求、选择和调度从分阶段串联走向联合学习的一种思路。",
+      "focus": "重点看 joint learning、Global Context Module、替代项之间的上下文交互，以及对完整日程而不是单次选择的评价方式。",
+      "future": "可作为博士后续更大模型的技术地图，思考航空旅客选择、航班时刻和需求是否能形成联合学习框架。",
+      "overlap": "航空场景不直接重合，但建模思想高度相关。",
+      "gap": "航空多机场竞争、票价/频次、航班时刻和容量约束下的联合学习仍未被覆盖。"
+    },
+    {
+      "priority": "P1",
+      "lane": "AI + 约束优化",
+      "title": "Feasibility-Aware Decision-Focused Learning for Predicting Parameters in the Constraints",
+      "authors": "Jayanta Mandi; Marianne Defresne; Senne Berden; Tias Guns",
+      "venue": "NeurIPS 2025",
+      "year": "2025",
+      "level": "机器学习顶级国际会议",
+      "url": "https://proceedings.neurips.cc/paper_files/paper/2025/hash/ef158a0d4f5364741a571b8d1d44fb1b-Abstract-Conference.html",
+      "summary": "研究预测参数进入优化约束时的 DFL。预测误差不仅会导致次优决策，还可能让下游优化问题直接不可行。论文提出两类基于 MLE 的损失，分别惩罚 infeasibility 与 suboptimality，并允许显式调节两者权衡。",
+      "why": "航空容量、需求覆盖、机队资源等问题中，大量预测量都会改变可行域。这比普通 forecasting 更接近真实 AI+优化系统。",
+      "focus": "重点看两类 loss 的构造、feasibility vs suboptimality trade-off，以及为什么不要求下游问题必须是 LP/MILP。",
+      "future": "很适合做一个简化机型指派或容量配置 Demo，直接训练“可行且决策好”的预测模型。",
+      "overlap": "与当前模型重合低，与未来 predict-then-optimize 路线高度相关。",
+      "gap": "航空领域的 constraint-aware DFL、robust DFL 与 demand uncertainty 联合训练仍很少。"
+    },
+    {
+      "priority": "P2",
+      "lane": "航空鲁棒性地图",
+      "title": "Robust airline scheduling with turnaround under uncertainty: towards collaborative airline scheduling",
+      "authors": "Elisa Guardo-Martinez; Stephan Onggo; Martin Kunc; Silvia Padrón; Maurizio Tomasella",
+      "venue": "Transportation Research Part E: Logistics and Transportation Review",
+      "year": "2026",
+      "level": "交通运输、物流与运筹高水平期刊综述",
+      "url": "https://doi.org/10.1016/j.tre.2025.104440",
+      "summary": "系统梳理航班计划、机型指派、飞机路径、机组与 turnaround 不确定性，并强调航空公司调度与地面保障协同的重要性。",
+      "why": "它用来扩展你对“鲁棒”的边界：需求不确定性只是航空 robust planning 的一种 uncertainty，未来还可能接入 turnaround、延误、飞机与机组等运行风险。",
+      "focus": "看 uncertainty taxonomy、不同 scheduling level 的集成、turnaround 与 future research。",
+      "future": "如果后面走向真实航空公司运行韧性或更综合的运行控制，这是重要研究地图。",
+      "overlap": "与鲁棒航班计划主题相关，但主要是综述与 turnaround 视角。",
+      "gap": "需求侧行为不确定性与运行侧不确定性如何统一进一套预测和优化框架，仍有空间。"
+    }
+  ],
+  "actions": [
+    {
+      "title": "做 Papi-RAD 2026 差异矩阵",
+      "time": "90 min",
+      "deliverable": "形成一张至少 4×6 的对比表，行包括 Papi-RAD 与你的候选研究方案，列至少包括旅客选择、需求不确定性、决策变量、数据、评价指标、求解算法；最后明确写出 3 个不能再声称为创新的点和 3 个仍可主张的差异。"
+    },
+    {
+      "title": "复现 Robust DFL 最小实验",
+      "time": "2–3 h",
+      "deliverable": "建立一个可运行 notebook，用同一数据训练 MSE 模型与 regret-oriented 模型；输出 prediction error 与 downstream regret 的对比表/图，并写 5–10 行解释。"
+    },
+    {
+      "title": "重构需求不确定性路线图",
+      "time": "60 min",
+      "deliverable": "制作一页图，按 point forecast → prediction interval → quantile forecast → probabilistic distribution → scenario generation → DRO ambiguity set 排列，并标出每一级的输入、输出、评价指标和下游用途。"
+    },
+    {
+      "title": "整理可进入 Neural Choice 的行为约束",
+      "time": "60 min",
+      "deliverable": "列出 5–10 条约束，例如价格单调性、时间单调性、符号约束、替代关系、损失厌恶或先验结构；标注哪些约束现有数据可识别、哪些只能做理论约束。"
+    }
+  ]
+}
