@@ -171,23 +171,27 @@
       "deliverable": "列出 5–10 条约束，例如价格单调性、时间单调性、符号约束、替代关系、损失厌恶或先验结构；标注哪些约束现有数据可识别、哪些只能做理论约束。"
     }
   ],
-  "weekly_summary": "本周最重要的变化是：未来方法线正在从“预测 + 优化串联”走向“概率预测 / Decision-Focused Learning / 分布鲁棒决策”，而选择行为也出现了更清晰的行为理论 + AI 融合路线。对现有航空研究而言，Papi-RAD 2026 已经把旅客选择、O-D 需求不确定性、航班计划和机型指派放进同一框架，因此后续创新不能只停留在“把几个模块串起来”，而要强化行为机制、概率不确定性、预测到决策的训练目标与真实数据证据。",
+  "weekly_summary": "这周真正值得注意的不是“又多了几篇论文”，而是三条路线正在收敛：第一，航空战术规划已经有人把旅客选择、O-D 需求不确定性、航班频次/时刻和机型指派放进同一个 DRO 框架，说明单纯“把模块串起来”已经不足以构成强创新；第二，需求预测正在从点预测升级到区间、分位数、完整概率分布和场景生成，预测结果开始真正服务下游鲁棒决策；第三，AI 与 OR 的接口正在从 predict-then-optimize 走向 Decision-Focused Learning，模型训练目标开始直接对 regret、可行性和决策稳定性负责。对你来说，未来最值得押注的是“行为机制 + 概率不确定性 + 下游决策质量”这条闭环；CV 不作为航空主线，但可以帮助你补问题重构、视觉表征和通用 AI 研究能力。",
   "signals": [
     {
-      "title": "研究边界",
-      "text": "旅客选择 + 需求不确定性 + 航班计划 + 机型指派已经出现高度集成工作，单纯模块联动的创新空间明显收窄。"
+      "title": "01 直接竞争边界变窄",
+      "text": "Papi-RAD 2026 已把旅客选择、需求不确定性、航班计划和机型指派放进同一框架。后续不能再把“模块联动”本身当作主要创新。"
     },
     {
-      "title": "未来方法",
-      "text": "Robust Decision-Focused Learning 值得进入主方法储备：预测模型应直接对 downstream regret、可行性和鲁棒性负责。"
+      "title": "02 需求预测必须升级",
+      "text": "从低/中/高经验情景继续往 prediction interval、quantile、probabilistic distribution、scenario generation 推，才真正能接上 robust / DRO。"
     },
     {
-      "title": "需求升级",
-      "text": "需求不确定性应从经验情景逐步升级到区间、分位数、概率分布与 scenario generation，再与 DRO 接口。"
+      "title": "03 AI + OR 是未来主方法线",
+      "text": "Robust DFL 与 feasibility-aware DFL 都在说明：预测模型以后要直接对 downstream regret、可行性和决策稳定性负责，而不只是 MAE / RMSE。"
     },
     {
-      "title": "成长拓展",
-      "text": "本周开始把推荐范围正式扩展到 Operations Research、AI/ML 与 Computer Vision，但仍以能形成方法迁移、复现实验或项目成果为筛选门槛。"
+      "title": "04 行为模型可以和 AI 融合",
+      "text": "Neural discrete choice 已经开始把经济学与行为先验做成约束。对你而言，RI、前景理论、Huff 先验未来都可以思考如何转成可训练、可验证的结构。"
+    },
+    {
+      "title": "05 CV 作为能力拓展，不抢主线",
+      "text": "CVPR 2026 的 VARC 最值得学的是“重新表述问题”的能力。CV 论文可以读，但目标是补表示学习、视觉模型和问题重构能力，而不是偏离航空主线。"
     }
   ],
   "scope": [
@@ -195,5 +199,11 @@
     "Operations Research",
     "AI / Machine Learning",
     "Computer Vision"
+  ],
+  "reading_order": [
+    "先读 Papi-RAD 2026：先确认别人已经把你的链条推进到哪里。",
+    "再读 Robust DFL：决定你未来要不要从“预测最准”转向“决策最好”。",
+    "第三读 STGCN-VAE：把需求不确定性从经验场景升级为概率输出。",
+    "有余力再读 Neural Choice 与 CVPR 2026，分别补行为+AI和通用 AI/CV 视野。"
   ]
 }
