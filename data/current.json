@@ -18,7 +18,10 @@
       "focus": "优先读 Introduction、AMNL 及其精确线性化、ambiguity set 构造、基准模型与消融、数值实验中的 decision variables，以及 future work。",
       "future": "它会直接影响你未来论文的创新定位：是强化行为理论，还是做概率需求预测，或进一步做 decision-focused / distributionally robust learning。",
       "overlap": "重复风险高：航班频次、时刻表、机型指派、旅客选择和 O-D 需求不确定性都已进入同一优化框架。",
-      "gap": "可继续从更强行为机制、真实市场份额/票价数据、概率预测到 DRO 的数据接口、可解释性、行为不确定性与运行不确定性联动切入。"
+      "gap": "可继续从更强行为机制、真实市场份额/票价数据、概率预测到 DRO 的数据接口、可解释性、行为不确定性与运行不确定性联动切入。",
+      "figure": {
+        "mode": "redraw"
+      }
     },
     {
       "priority": "P0",
@@ -34,7 +37,17 @@
       "focus": "重点看 regret 的定义、两类 uncertainty、Wasserstein ambiguity set、训练梯度推导和实验中的 robust baseline。",
       "future": "非常适合做成一个 GitHub Demo：同一需求数据下比较 MSE 最优模型与 downstream regret 最优模型，验证“预测最准 ≠ 决策最好”。",
       "overlap": "与现有论文直接重合低，但与未来“需求预测 → 优化”的升级方向高度一致。",
-      "gap": "将 robust DFL 迁移到航空 O-D 需求、频次/运力规划和机型指派，并与行为模型结合，仍有明显研究空间。"
+      "gap": "将 robust DFL 迁移到航空 O-D 需求、频次/运力规划和机型指派，并与行为模型结合，仍有明显研究空间。",
+      "figure": {
+        "mode": "original",
+        "url": "https://d2ol7oe51mr4n9.cloudfront.net/user_3JEIpswAmLW01hdUh8lLIEvNdib/fd86de44-8d76-4516-992a-45a9546ded63.png",
+        "figure_no": "Figure 1",
+        "source": "PMLR / UAI 2026",
+        "source_url": "https://proceedings.mlr.press/v337/yamao26a.html",
+        "license": "CC BY 4.0",
+        "caption_zh": "观测误差下，各方法的平均相对 regret 与尾部风险 CVaR₀.₉ 对比。",
+        "look": "重点看 reg / ropt 系列是否同时压低平均 regret 和尾部风险，以及 two-stage 只优化预测误差时为何不稳定。"
+      }
     },
     {
       "priority": "P0",
@@ -50,7 +63,17 @@
       "focus": "重点看概率预测评价指标、VAE 场景生成、KDE 分布构造、uncertainty calibration，以及如何证明生成场景有决策价值。",
       "future": "可发展为航空 O-D 概率需求预测模块，也可以单独做成 AI 时空预测与 uncertainty quantification 项目。",
       "overlap": "与现有需求预测主题中等重合，但应用对象和模型结构不同。",
-      "gap": "航空场景中的多机场竞争、旅客选择、票价/频次共同作用下的概率需求分布，以及这些分布如何进入下游 DRO，仍未解决。"
+      "gap": "航空场景中的多机场竞争、旅客选择、票价/频次共同作用下的概率需求分布，以及这些分布如何进入下游 DRO，仍未解决。",
+      "figure": {
+        "mode": "original",
+        "url": "https://ars.els-cdn.com/content/image/1-s2.0-S0968090X25003870-gr2.jpg",
+        "figure_no": "Figure 2",
+        "source": "Transportation Research Part C",
+        "source_url": "https://doi.org/10.1016/j.trc.2025.105383",
+        "license": "CC BY",
+        "caption_zh": "STGCN-VAE 总体架构：时空特征进入 VAE 潜空间，多次采样后用 KDE 构造需求概率分布。",
+        "look": "看清楚训练阶段和生成阶段的分工。真正能接鲁棒优化的是右侧“多场景样本 → 概率分布”，不只是左侧预测 backbone。"
+      }
     },
     {
       "priority": "P1",
@@ -66,7 +89,10 @@
       "focus": "看 multi-quantile loss、interval calibration、MoE 分工机制和 joint multi-modal demand 的建模方式。",
       "future": "可用于设计一个“不同 uncertainty representation 对下游 robust planning 的影响”实验。",
       "overlap": "与现有研究直接重合较低。",
-      "gap": "不同不确定性表示方法是否会显著改变航空运力/机型决策，仍是非常值得验证的问题。"
+      "gap": "不同不确定性表示方法是否会显著改变航空运力/机型决策，仍是非常值得验证的问题。",
+      "figure": {
+        "mode": "redraw"
+      }
     },
     {
       "priority": "P1",
@@ -82,7 +108,10 @@
       "focus": "看 domain constraint 数学形式、pseudo-data 生成、ASU-DNN、generalization 与 behavioral plausibility 的 trade-off。",
       "future": "适合作为未来“行为理论 + AI”项目储备，尤其可以思考 RI、前景理论、Huff 先验如何转成可训练约束。",
       "overlap": "和选择行为主题重合，但与现有 RI/PT 结构差异明显。",
-      "gap": "更复杂的行为机制如何转成可学习、可识别、可验证的 neural constraints，仍有空间。"
+      "gap": "更复杂的行为机制如何转成可学习、可识别、可验证的 neural constraints，仍有空间。",
+      "figure": {
+        "mode": "redraw"
+      }
     },
     {
       "priority": "P1",
@@ -98,7 +127,17 @@
       "focus": "重点看 joint learning、Global Context Module、替代项之间的上下文交互，以及对完整日程而不是单次选择的评价方式。",
       "future": "可作为博士后续更大模型的技术地图，思考航空旅客选择、航班时刻和需求是否能形成联合学习框架。",
       "overlap": "航空场景不直接重合，但建模思想高度相关。",
-      "gap": "航空多机场竞争、票价/频次、航班时刻和容量约束下的联合学习仍未被覆盖。"
+      "gap": "航空多机场竞争、票价/频次、航班时刻和容量约束下的联合学习仍未被覆盖。",
+      "figure": {
+        "mode": "original",
+        "url": "https://ars.els-cdn.com/content/image/1-s2.0-S0968090X25005169-gr1.jpg",
+        "figure_no": "Figure 1",
+        "source": "Transportation Research Part C",
+        "source_url": "https://doi.org/10.1016/j.trc.2025.105512",
+        "license": "Open Access · Creative Commons",
+        "caption_zh": "Skyline-NNjoint 完整架构：不同 zone 的选择模块通过 Global Context Module 共享上下文，再联合输出活动、目的地与方式选择。",
+        "look": "重点看 Global Context Module 插在什么位置，以及它怎样让各 alternative 不再彼此独立。这正对应传统 MNL 的 IIA 局限。"
+      }
     },
     {
       "priority": "P1",
@@ -114,7 +153,10 @@
       "focus": "重点看两类 loss 的构造、feasibility vs suboptimality trade-off，以及为什么不要求下游问题必须是 LP/MILP。",
       "future": "很适合做一个简化机型指派或容量配置 Demo，直接训练“可行且决策好”的预测模型。",
       "overlap": "与当前模型重合低，与未来 predict-then-optimize 路线高度相关。",
-      "gap": "航空领域的 constraint-aware DFL、robust DFL 与 demand uncertainty 联合训练仍很少。"
+      "gap": "航空领域的 constraint-aware DFL、robust DFL 与 demand uncertainty 联合训练仍很少。",
+      "figure": {
+        "mode": "redraw"
+      }
     },
     {
       "priority": "P2",
@@ -130,7 +172,17 @@
       "focus": "看 uncertainty taxonomy、不同 scheduling level 的集成、turnaround 与 future research。",
       "future": "如果后面走向真实航空公司运行韧性或更综合的运行控制，这是重要研究地图。",
       "overlap": "与鲁棒航班计划主题相关，但主要是综述与 turnaround 视角。",
-      "gap": "需求侧行为不确定性与运行侧不确定性如何统一进一套预测和优化框架，仍有空间。"
+      "gap": "需求侧行为不确定性与运行侧不确定性如何统一进一套预测和优化框架，仍有空间。",
+      "figure": {
+        "mode": "original",
+        "url": "https://ars.els-cdn.com/content/image/1-s2.0-S1366554525004818-gr1.jpg",
+        "figure_no": "Figure 1",
+        "source": "Transportation Research Part E",
+        "source_url": "https://doi.org/10.1016/j.tre.2025.104440",
+        "license": "CC BY",
+        "caption_zh": "航空排班韧性的分类：鲁棒性侧重事前吸收与恢复能力，响应性侧重扰动发生后的 disruption management。",
+        "look": "这张图用来提醒你：需求鲁棒只是整体 resilience 的一部分。后面如果扩展，应区分 reliability、flexibility 和 reactive recovery。"
+      }
     },
     {
       "priority": "P2",
@@ -146,7 +198,10 @@
       "focus": "重点看 ARC 为什么可以被重构为 vision problem、canvas 表示、ViT 的训练方式、test-time training，以及作者如何比较 vision-centric 方法与 LLM / recurrent reasoning 方法。",
       "future": "可以做一个小型 CV/Reasoning 复现实验，训练把非视觉问题重新编码为视觉或结构化输入的能力；它不应挤占航空主线，但适合扩展通用 AI 研究视野。",
       "overlap": "与当前航空研究几乎无直接重复。",
-      "gap": "价值主要在个人 AI/CV 能力拓展和研究问题重构能力，不作为当前航空论文的直接创新来源。"
+      "gap": "价值主要在个人 AI/CV 能力拓展和研究问题重构能力，不作为当前航空论文的直接创新来源。",
+      "figure": {
+        "mode": "redraw"
+      }
     }
   ],
   "actions": [
