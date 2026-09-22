@@ -29,6 +29,22 @@ function paperVisual(p,i){
   return `<div class="paper-visual ${kind}"><div class="visual-label"><span>${labels[kind]}</span><b>${String(i+1).padStart(2,"0")}</b></div>${svg}</div>`;
 }
 
+
+function paperFigure(p,i){
+  if(!p.figure || p.figure.mode!=="original" || !p.figure.url) return paperVisual(p,i);
+  return `<figure class="paper-figure original">
+    <div class="figure-ribbon"><span>原论文图 · ${esc(p.figure.figure_no||"Figure")}</span><b>${esc(p.figure.license||"Open access")}</b></div>
+    <a href="${esc(p.figure.url)}" target="_blank" rel="noreferrer" class="figure-image-link">
+      <img src="${esc(p.figure.url)}" alt="${esc(p.figure.caption_zh||p.title)}" loading="lazy" referrerpolicy="no-referrer">
+    </a>
+    <figcaption>
+      <p>${esc(p.figure.caption_zh||"")}</p>
+      <div class="figure-look"><b>你看哪里</b><span>${esc(p.figure.look||"")}</span></div>
+      <a href="${esc(p.figure.source_url||p.url)}" target="_blank" rel="noreferrer">来源：${esc(p.figure.source||p.venue)} · ${esc(p.figure.figure_no||"Figure")} ↗</a>
+    </figcaption>
+  </figure>`;
+}
+
 function orb(total){
   return `<div class="orb-wrap" aria-hidden="true">
     <div class="orb-halo"></div>
@@ -47,7 +63,7 @@ function orb(total){
 
 function card(p,i){
   return `<article class="card ${esc(p.priority).toLowerCase()}" data-paper="${i}">
-    ${paperVisual(p,i)}
+    ${paperFigure(p,i)}
     <div class="card-body">
       <div class="card-top">
         <span class="tag priority ${esc(p.priority).toLowerCase()}">${esc(p.priority)}</span>
