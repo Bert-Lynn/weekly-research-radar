@@ -131,6 +131,22 @@
       "future": "如果后面走向真实航空公司运行韧性或更综合的运行控制，这是重要研究地图。",
       "overlap": "与鲁棒航班计划主题相关，但主要是综述与 turnaround 视角。",
       "gap": "需求侧行为不确定性与运行侧不确定性如何统一进一套预测和优化框架，仍有空间。"
+    },
+    {
+      "priority": "P2",
+      "lane": "AI / CV 拓展",
+      "title": "ARC Is a Vision Problem!",
+      "authors": "Keya Hu; Ali Cy; Linlu Qiu; Xiaoman Delores Ding; Runqian Wang; Yeyin Eva Zhu; Jacob Andreas; Kaiming He",
+      "venue": "CVPR 2026",
+      "year": "2026",
+      "level": "计算机视觉顶级国际会议",
+      "url": "https://openaccess.thecvf.com/content/CVPR2026/html/Hu_ARC_Is_a_Vision_Problem_CVPR_2026_paper.html",
+      "summary": "把抽象推理基准 ARC 重新表述为视觉问题：将输入表示为可由标准视觉架构处理的 canvas，用 vanilla Vision Transformer 做 image-to-image mapping，并通过 test-time training 适应未见任务。论文在 ARC-1 上取得 60.4% accuracy。",
+      "why": "它和航空研究不直接重合，但非常适合作为 AI/CV 成长线的拓展阅读。最值得学的不是某个视觉模块，而是“重新表述问题”这一能力：改变输入表示和归纳偏置，有时比堆更复杂模型更重要。",
+      "focus": "重点看 ARC 为什么可以被重构为 vision problem、canvas 表示、ViT 的训练方式、test-time training，以及作者如何比较 vision-centric 方法与 LLM / recurrent reasoning 方法。",
+      "future": "可以做一个小型 CV/Reasoning 复现实验，训练把非视觉问题重新编码为视觉或结构化输入的能力；它不应挤占航空主线，但适合扩展通用 AI 研究视野。",
+      "overlap": "与当前航空研究几乎无直接重复。",
+      "gap": "价值主要在个人 AI/CV 能力拓展和研究问题重构能力，不作为当前航空论文的直接创新来源。"
     }
   ],
   "actions": [
@@ -154,5 +170,30 @@
       "time": "60 min",
       "deliverable": "列出 5–10 条约束，例如价格单调性、时间单调性、符号约束、替代关系、损失厌恶或先验结构；标注哪些约束现有数据可识别、哪些只能做理论约束。"
     }
+  ],
+  "weekly_summary": "本周最重要的变化是：未来方法线正在从“预测 + 优化串联”走向“概率预测 / Decision-Focused Learning / 分布鲁棒决策”，而选择行为也出现了更清晰的行为理论 + AI 融合路线。对现有航空研究而言，Papi-RAD 2026 已经把旅客选择、O-D 需求不确定性、航班计划和机型指派放进同一框架，因此后续创新不能只停留在“把几个模块串起来”，而要强化行为机制、概率不确定性、预测到决策的训练目标与真实数据证据。",
+  "signals": [
+    {
+      "title": "研究边界",
+      "text": "旅客选择 + 需求不确定性 + 航班计划 + 机型指派已经出现高度集成工作，单纯模块联动的创新空间明显收窄。"
+    },
+    {
+      "title": "未来方法",
+      "text": "Robust Decision-Focused Learning 值得进入主方法储备：预测模型应直接对 downstream regret、可行性和鲁棒性负责。"
+    },
+    {
+      "title": "需求升级",
+      "text": "需求不确定性应从经验情景逐步升级到区间、分位数、概率分布与 scenario generation，再与 DRO 接口。"
+    },
+    {
+      "title": "成长拓展",
+      "text": "本周开始把推荐范围正式扩展到 Operations Research、AI/ML 与 Computer Vision，但仍以能形成方法迁移、复现实验或项目成果为筛选门槛。"
+    }
+  ],
+  "scope": [
+    "Aviation / Transportation",
+    "Operations Research",
+    "AI / Machine Learning",
+    "Computer Vision"
   ]
 }
