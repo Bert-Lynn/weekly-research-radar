@@ -14,21 +14,17 @@ const RadarCloud=(()=>{
     if(!res.ok) throw Object.assign(new Error(data.error||"request_failed"),{status:res.status,code:data.error});
     return data;
   }
+  async function register(username,password){return request("register",{username,password})}
   async function login(username,password){
     const data=await request("login",{username,password});
     setToken(data.token||"");
     return data;
-  }
-  async function initialize(username,password){
-    return request("initialize",{username,password});
   }
   async function me(){
     try{return await request("me",{},true)}catch(e){if(e.status===401)setToken("");throw e}
   }
   async function list(week){return request("list",{week},true)}
   async function upsert({week,paperKey,isRead,note}){return request("upsert",{week,paperKey,isRead,note},true)}
-  async function logout(){
-    try{if(token())await request("logout",{},true)}finally{setToken("")}
-  }
-  return{request,status:()=>request("status"),initialize,login,me,list,upsert,logout,token,setToken,TOKEN_KEY};
+  async function logout(){try{if(token())await request("logout",{},true)}finally{setToken("")}}
+  return{request,register,login,me,list,upsert,logout,token,setToken,TOKEN_KEY};
 })();
