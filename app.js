@@ -90,7 +90,7 @@ function card(p,i){
             <button type="button" class="cloud-sync-btn" data-cloud-index="${i}">同步到云端</button>
             <span data-cloud-state="${i}">本地草稿</span>
           </div>
-          <small>本地输入会先保存在当前浏览器；点击“同步到云端”后写入你的私有数据库。</small>
+          <small>本地输入会先保存在当前浏览器；点击“同步到云端”后写入 Supabase 私有数据库。</small>
         </div>
       </details>
       <a class="paper-link" href="${esc(p.url)}" target="_blank" rel="noreferrer">打开原文 / DOI <span>↗</span></a>
@@ -151,45 +151,24 @@ function setupProgress(papers){\n  const total=papers.length;
     const index=Number(btn.dataset.cloudIndex);
     const paper=papers[index];
     if(!paper)return;
-    const note=localStorage.getItem(noteKey(index))||"";
-    const isRead=localStorage.getItem(readKey(index))==="1";
-    setCloudState(index,"等待登录/连接…");
-    const popup=window.open(
-      `${CLOUD_ORIGIN}/workspace?week=${encodeURIComponent(currentWeek)}`,
-      "radar-cloud-notes"
-    );
-    if(!popup){
-      setCloudState(index,"浏览器阻止了弹窗");
-      return;
-    }
-    pendingCloudImport={index,paperKey:paper.url,note,isRead,popup};
+    const pending={
+      week:currentWeek,
+      paperKey:paper.url,
+      note:localStorage.getItem(noteKey(index))||"",
+      isRead:localStorage.getItem(readKey(index))==="1"
+    };
+    localStorage.setItem("radar_pending_cloud_import_v1",JSON.stringify(pending));
+    setCloudState(index,"正在打开云端笔记…");
+    location.href="workspace.html?week="+encodeURIComponent(currentWeek);
   }));
-
-  window.addEventListener("message",(event)=>{
-    if(event.origin!==CLOUD_ORIGIN || !pendingCloudImport)return;
-    if(event.data?.type==="cloud-ready" && event.data.week===currentWeek){
-      setCloudState(pendingCloudImport.index,"正在同步…");
-      event.source?.postMessage({
-        type:"import-note",
-        week:currentWeek,
-        paperKey:pendingCloudImport.paperKey,
-        note:pendingCloudImport.note,
-        isRead:pendingCloudImport.isRead
-      },CLOUD_ORIGIN);
-    }
-    if(event.data?.type==="cloud-imported" && event.data.paperKey===pendingCloudImport.paperKey){
-      setCloudState(pendingCloudImport.index,"已同步云端");
-      pendingCloudImport=null;
-    }
-  });
 
   refresh();
 }
 
 async function load(){
   const [c,a]=await Promise.all([
-    fetch("data/current.json?v=20260927-v9",{cache:"no-store"}).then(r=>r.json()),
-    fetch("data/archive.json?v=20260927-v9",{cache:"no-store"}).then(r=>r.json())
+    fetch("data/current.json?v=20260927-v11",{cache:"no-store"}).then(r=>r.json()),
+    fetch("data/archive.json?v=20260927-v11",{cache:"no-store"}).then(r=>r.json())
   ]);
   currentWeek=c.week;
   const p0=c.papers.filter(p=>p.priority==="P0"),p1=c.papers.filter(p=>p.priority==="P1"),p2=c.papers.filter(p=>p.priority==="P2");
@@ -207,7 +186,7 @@ async function load(){
         <div class="progress-card">
           <div class="progress-top"><div><span>阅读进度</span><strong id="progress-count">0 / ${c.papers.length}</strong></div><em id="progress-percent">0%</em></div>
           <div class="progress-track"><i id="progress-bar"></i></div>
-          <small>勾选状态和笔记只保存在你当前浏览器。需要跨设备时可使用顶部“跨设备同步”。</small>
+          <small>本地勾选和笔记可继续使用；登录后可同步到 Supabase 云端并跨设备查看。</small>
         </div>
       </div>
       <div class="overview-visual">
