@@ -4,7 +4,8 @@ const valid=/^\d{4}-\d{2}-\d{2}$/.test(week);
 const statusEl=document.querySelector("#brief-status");
 const contentEl=document.querySelector("#brief-content");
 const dateEl=document.querySelector("#side-date");
-const tocEl=document.querySelector("#toc");\nconst cloudLink=document.querySelector("#cloud-brief-link");
+const tocEl=document.querySelector("#toc");
+const cloudLink=document.querySelector("#cloud-brief-link");
 
 function slugify(text){
   return text.toLowerCase().trim().replace(/[^\w\u4e00-\u9fff]+/g,"-").replace(/^-+|-+$/g,"");
@@ -32,8 +33,9 @@ function buildToc(){
 }
 async function load(){
   if(!valid)throw new Error("invalid_week");
-  dateEl.textContent=week;\n  if(cloudLink) cloudLink.href=`https://trajectory-research-growth.higgsfield.app/workspace?week=${encodeURIComponent(week)}`;
-  const res=await fetch(`./${week}.md?v=20260927-v1`,{cache:"no-store"});
+  dateEl.textContent=week;
+  if(cloudLink) cloudLink.href=`../workspace.html?week=${encodeURIComponent(week)}`;
+  const res=await fetch(`./${week}.md?v=20260927-v3`,{cache:"no-store"});
   if(!res.ok)throw new Error("not_found");
   const md=await res.text();
   marked.setOptions({gfm:true,breaks:false});
