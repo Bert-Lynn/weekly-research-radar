@@ -3,7 +3,7 @@ function esc(s){return String(s??"").replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&l
 let currentWeek="";
 
 function readKey(i){return `radar:${currentWeek}:read:${i}`}
-function noteKey(i){return `radar:${currentWeek}:note:${i}`}\nconst CLOUD_ORIGIN="https://trajectory-research-growth.higgsfield.app";\nlet pendingCloudImport=null;
+function noteKey(i){return `radar:${currentWeek}:note:${i}`}
 
 function visualKind(p){
   const t=(p.title+" "+p.lane).toLowerCase();
@@ -98,7 +98,8 @@ function card(p,i){
   </article>`
 }
 
-function setupProgress(papers){\n  const total=papers.length;
+function setupProgress(papers){
+  const total=papers.length;
   const buttons=[...document.querySelectorAll("[data-read-index]")];
   const states=[...document.querySelectorAll("[data-read-state]")];
   const notes=[...document.querySelectorAll("[data-note-index]")];
