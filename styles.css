@@ -163,3 +163,10 @@ nav a:hover{color:var(--ink)} nav a:hover::after{right:0}
   .brand>span:last-child{display:none}
 }
 @media(prefers-reduced-motion:reduce){.ring-a,.ring-b,.ring-c,.path-a,.path-b,.nodes circle,.orb-halo{animation:none!important}.card,.progress-track i{transition:none!important}}
+
+
+/* local -> cloud note sync */
+.cloud-sync-row{display:flex;align-items:center;justify-content:space-between;gap:10px;margin-top:9px}
+.cloud-sync-btn{appearance:none;border:1px solid #cbd8d1;border-radius:9px;background:#eef5f1;color:#49675a;padding:7px 10px;font:inherit;font-size:9px;font-weight:800;cursor:pointer}
+.cloud-sync-btn:hover{background:#e6f0ea;border-color:#b7cbbf}
+.cloud-sync-row span{color:#84928b;font-size:8px}
