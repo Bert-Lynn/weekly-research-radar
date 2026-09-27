@@ -5,7 +5,8 @@
     "file": "weekly/view.html?week=2026-09-25",
     "must_read": 3,
     "total": 6,
-    "source_file": "weekly/2026-09-25.md"
+    "source_file": "weekly/2026-09-25.md",
+    "data_file": "weekly/2026-09-25.json"
   },
   {
     "week": "2026-09-22",
@@ -13,6 +14,7 @@
     "file": "weekly/view.html?week=2026-09-22",
     "must_read": 3,
     "total": 9,
-    "source_file": "weekly/2026-09-22.md"
+    "source_file": "weekly/2026-09-22.md",
+    "data_file": "weekly/2026-09-22.json"
   }
 ]
