@@ -3,7 +3,7 @@ function esc(s){return String(s??"").replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&l
 let currentWeek="";
 
 function readKey(i){return `radar:${currentWeek}:read:${i}`}
-function noteKey(i){return `radar:${currentWeek}:note:${i}`}
+function noteKey(i){return `radar:${currentWeek}:note:${i}`}\nconst CLOUD_ORIGIN="https://trajectory-research-growth.higgsfield.app";\nlet pendingCloudImport=null;
 
 function visualKind(p){
   const t=(p.title+" "+p.lane).toLowerCase();
@@ -86,7 +86,11 @@ function card(p,i){
         <div class="notes-panel">
           <b>我的问题 / 笔记</b>
           <textarea data-note-index="${i}" rows="4" placeholder="记下疑点、复现实验或与自己研究的连接……"></textarea>
-          <small>只保存在当前浏览器。</small>
+          <div class="cloud-sync-row">
+            <button type="button" class="cloud-sync-btn" data-cloud-index="${i}">同步到云端</button>
+            <span data-cloud-state="${i}">本地草稿</span>
+          </div>
+          <small>本地输入会先保存在当前浏览器；点击“同步到云端”后写入你的私有数据库。</small>
         </div>
       </details>
       <a class="paper-link" href="${esc(p.url)}" target="_blank" rel="noreferrer">打开原文 / DOI <span>↗</span></a>
@@ -94,10 +98,12 @@ function card(p,i){
   </article>`
 }
 
-function setupProgress(total){
+function setupProgress(papers){\n  const total=papers.length;
   const buttons=[...document.querySelectorAll("[data-read-index]")];
   const states=[...document.querySelectorAll("[data-read-state]")];
   const notes=[...document.querySelectorAll("[data-note-index]")];
+  const cloudButtons=[...document.querySelectorAll("[data-cloud-index]")];
+  const cloudStates=[...document.querySelectorAll("[data-cloud-state]")];
 
   function refresh(){
     let done=0;
@@ -134,6 +140,47 @@ function setupProgress(total){
     const i=area.dataset.noteIndex;
     area.value=localStorage.getItem(noteKey(i))||"";
     area.addEventListener("input",()=>localStorage.setItem(noteKey(i),area.value));
+  });
+
+  function setCloudState(index,text){
+    const el=cloudStates.find(x=>x.dataset.cloudState===String(index));
+    if(el) el.textContent=text;
+  }
+
+  cloudButtons.forEach(btn=>btn.addEventListener("click",()=>{
+    const index=Number(btn.dataset.cloudIndex);
+    const paper=papers[index];
+    if(!paper)return;
+    const note=localStorage.getItem(noteKey(index))||"";
+    const isRead=localStorage.getItem(readKey(index))==="1";
+    setCloudState(index,"等待登录/连接…");
+    const popup=window.open(
+      `${CLOUD_ORIGIN}/workspace?week=${encodeURIComponent(currentWeek)}`,
+      "radar-cloud-notes"
+    );
+    if(!popup){
+      setCloudState(index,"浏览器阻止了弹窗");
+      return;
+    }
+    pendingCloudImport={index,paperKey:paper.url,note,isRead,popup};
+  }));
+
+  window.addEventListener("message",(event)=>{
+    if(event.origin!==CLOUD_ORIGIN || !pendingCloudImport)return;
+    if(event.data?.type==="cloud-ready" && event.data.week===currentWeek){
+      setCloudState(pendingCloudImport.index,"正在同步…");
+      event.source?.postMessage({
+        type:"import-note",
+        week:currentWeek,
+        paperKey:pendingCloudImport.paperKey,
+        note:pendingCloudImport.note,
+        isRead:pendingCloudImport.isRead
+      },CLOUD_ORIGIN);
+    }
+    if(event.data?.type==="cloud-imported" && event.data.paperKey===pendingCloudImport.paperKey){
+      setCloudState(pendingCloudImport.index,"已同步云端");
+      pendingCloudImport=null;
+    }
   });
 
   refresh();
@@ -201,6 +248,6 @@ async function load(){
       <div class="archive">${a.map(x=>`<a href="${esc(x.file)}"><span>${esc(x.week)}</span><b>${esc(x.label)}</b><em>${esc(x.total)} papers</em></a>`).join("")}</div>
     </section>`;
 
-  setupProgress(c.papers.length);
+  setupProgress(c.papers);
 }
 load().catch(()=>{document.querySelector("#app").innerHTML="<p class='loading'>读取数据失败，请直接进入 weekly/ 查看周报。</p>"})
