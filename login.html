@@ -2,8 +2,8 @@
 <html lang="zh-CN">
 <head>
   <meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
-  <meta name="theme-color" content="#f5f7f4"><title>登录 · Weekly Radar</title>
-  <link rel="stylesheet" href="cloud.css?v=20260927-v1">
+  <meta name="theme-color" content="#f5f7f4"><title>登录 / 注册 · Weekly Radar</title>
+  <link rel="stylesheet" href="cloud.css?v=20260927-v2">
 </head>
 <body>
 <header class="cloud-nav">
@@ -15,17 +15,23 @@
     <p class="login-kicker">PRIVATE CLOUD NOTES</p>
     <h1 id="login-title">登录</h1>
     <p class="login-intro" id="login-intro">登录后，已读状态和每篇论文的笔记会同步到 Supabase 私有数据库。</p>
-    <div id="setup-banner" class="setup-banner" hidden>这是第一次使用。初始化唯一账号后，注册入口会自动关闭。</div>
+
+    <div class="auth-tabs">
+      <button type="button" id="tab-login" class="active">登录</button>
+      <button type="button" id="tab-register">注册</button>
+    </div>
+
     <form id="login-form">
-      <label><span>账号</span><input id="username" autocomplete="username" required maxlength="64"></label>
+      <label><span>账号 / 邮箱</span><input id="username" autocomplete="username" required minlength="3" maxlength="64"></label>
       <label><span>密码</span><input id="password" type="password" autocomplete="current-password" required minlength="10" maxlength="128"></label>
       <label id="confirm-wrap" hidden><span>确认密码</span><input id="confirm" type="password" autocomplete="new-password" maxlength="128"></label>
       <p class="login-error" id="error" hidden></p>
       <button class="login-primary" id="submit" type="submit">登录</button>
     </form>
-    <p class="login-note">账号与笔记不存放在 GitHub，也不经过 Higgsfield。GitHub Pages 只负责网页，Supabase 负责认证与数据库。</p>
+
+    <p class="login-note">每个账号只看得到自己的阅读进度和笔记。账号与笔记不存放在 GitHub；GitHub Pages 负责网页，Supabase 负责认证与数据库。</p>
   </section>
 </main>
-<script src="cloud.js?v=20260927-v1"></script>
-<script src="login.js?v=20260927-v1"></script>
+<script src="cloud.js?v=20260927-v2"></script>
+<script src="login.js?v=20260927-v2"></script>
 </body></html>
