@@ -35,7 +35,7 @@ function paperFigure(p,i){
   return `<figure class="paper-figure original">
     <div class="figure-ribbon"><span>原论文图 · ${esc(p.figure.figure_no||"Figure")}</span><b>${esc(p.figure.license||"Open access")}</b></div>
     <a href="${esc(p.figure.url)}" target="_blank" rel="noreferrer" class="figure-image-link">
-      <img src="${esc(p.figure.url)}" alt="${esc(p.figure.caption_zh||p.title)}" loading="lazy" referrerpolicy="no-referrer">
+      <img src="${esc(p.figure.url)}" alt="${esc(p.figure.caption_zh||p.title)}" loading="lazy" decoding="async" fetchpriority="low" referrerpolicy="no-referrer">
     </a>
     <figcaption>
       <p>${esc(p.figure.caption_zh||"")}</p>
@@ -166,12 +166,15 @@ function setupProgress(papers){\n  const total=papers.length;
 }
 
 async function load(){
-  const [c,a]=await Promise.all([
-    fetch("data/current.json?v=20260927-v11",{cache:"no-store"}).then(r=>r.json()),
-    fetch("data/archive.json?v=20260927-v11",{cache:"no-store"}).then(r=>r.json())
-  ]);
+  const c=await fetch("data/current.json?v=20260927-v12",{cache:"default"}).then(r=>{
+    if(!r.ok)throw new Error("current_failed");
+    return r.json();
+  });
+
   currentWeek=c.week;
-  const p0=c.papers.filter(p=>p.priority==="P0"),p1=c.papers.filter(p=>p.priority==="P1"),p2=c.papers.filter(p=>p.priority==="P2");
+  const p0=c.papers.filter(p=>p.priority==="P0");
+  const p1=c.papers.filter(p=>p.priority==="P1");
+  const p2=c.papers.filter(p=>p.priority==="P2");
   const signals=(c.signals||[]).map((x,i)=>`<article><span>${String(i+1).padStart(2,"0")}</span><div><b>${esc(x.title)}</b><p>${esc(x.text)}</p></div></article>`).join("");
   const scope=(c.scope||[]).map(x=>`<b>${esc(x)}</b>`).join("");
   const order=(c.reading_order||[]).map((x,i)=>`<li><span>${String(i+1).padStart(2,"0")}</span><p>${esc(x)}</p></li>`).join("");
@@ -191,10 +194,7 @@ async function load(){
       </div>
       <div class="overview-visual">
         ${orb(c.papers.length)}
-        <div class="reading-order">
-          <span>这周怎么读</span>
-          <ol>${order}</ol>
-        </div>
+        <div class="reading-order"><span>这周怎么读</span><ol>${order}</ol></div>
       </div>
       <div class="signals-title"><span>WEEKLY SIGNALS</span><h2>这周我给你的 5 条判断</h2></div>
       <div class="signals-grid count-${(c.signals||[]).length}">${signals}</div>
@@ -203,7 +203,7 @@ async function load(){
     <section class="focus-strip"><span>筛选方向</span><b>航空 / 交通</b><b>Operations Research</b><b>AI / ML</b><b>Computer Vision</b><b>AI + OR</b></section>
 
     <section class="section" id="must">
-      <div class="section-head"><div><p class="eyebrow">START HERE</p><h2>本周先读这 ${p0.length} 篇</h2></div><p>这里只放真正会影响你的研究边界或未来方法线的论文。P0 与下面的拓展阅读分开处理。</p></div>
+      <div class="section-head"><div><p class="eyebrow">START HERE</p><h2>本周先读这 ${p0.length} 篇</h2></div><p>这里只放真正会影响你的研究边界或未来方法线的论文。</p></div>
       <div class="paper-grid featured count-${p0.length}">${p0.map((p,i)=>card(p,i)).join("")}</div>
     </section>
 
@@ -223,10 +223,25 @@ async function load(){
     </section>
 
     <section class="archive-panel" id="archive">
-      <div><p class="eyebrow">ARCHIVE</p><h2>历史周报</h2><p>每周五新增一周，不覆盖旧推荐。以后可以回看一个方法是什么时候进入你的研究视野的。</p></div>
-      <div class="archive">${a.map(x=>`<a href="${esc(x.file)}"><span>${esc(x.week)}</span><b>${esc(x.label)}</b><em>${esc(x.total)} papers</em></a>`).join("")}</div>
+      <div><p class="eyebrow">ARCHIVE</p><h2>历史周报</h2><p>历史归档延后加载，不影响本周论文首屏。</p></div>
+      <div class="archive" id="archive-list"><span class="archive-loading">正在载入历史周报…</span></div>
     </section>`;
 
   setupProgress(c.papers);
+
+  // Do not block current-week content on archive data.
+  fetch("data/archive.json?v=20260927-v12",{cache:"default"})
+    .then(r=>r.ok?r.json():[])
+    .then(a=>{
+      const box=document.querySelector("#archive-list");
+      if(!box)return;
+      box.innerHTML=a.length
+        ? a.map(x=>`<a href="${esc(x.file)}"><span>${esc(x.week)}</span><b>${esc(x.label)}</b><em>${esc(x.total)} papers</em></a>`).join("")
+        : '<span class="archive-loading">暂无历史周报</span>';
+    })
+    .catch(()=>{
+      const box=document.querySelector("#archive-list");
+      if(box)box.innerHTML='<span class="archive-loading">历史周报加载失败，可稍后刷新。</span>';
+    });
 }
 load().catch(()=>{document.querySelector("#app").innerHTML="<p class='loading'>读取数据失败，请直接进入 weekly/ 查看周报。</p>"})
