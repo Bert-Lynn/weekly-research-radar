@@ -170,3 +170,4 @@ nav a:hover{color:var(--ink)} nav a:hover::after{right:0}
 .cloud-sync-btn{appearance:none;border:1px solid #cbd8d1;border-radius:9px;background:#eef5f1;color:#49675a;padding:7px 10px;font:inherit;font-size:9px;font-weight:800;cursor:pointer}
 .cloud-sync-btn:hover{background:#e6f0ea;border-color:#b7cbbf}
 .cloud-sync-row span{color:#84928b;font-size:8px}
+\n.archive-loading{display:block;padding:14px;color:var(--faint);font-size:10px}\n
