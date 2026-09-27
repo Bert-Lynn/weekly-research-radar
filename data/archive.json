@@ -1,5 +1,12 @@
 [
   {
+    "week": "2026-09-25",
+    "label": "Week 02 · 周更",
+    "file": "weekly/2026-09-25.md",
+    "must_read": 3,
+    "total": 6
+  },
+  {
     "week": "2026-09-22",
     "label": "Week 01 · 初始化期",
     "file": "weekly/2026-09-22.md",
