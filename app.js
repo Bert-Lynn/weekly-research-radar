@@ -76,18 +76,18 @@ function card(p,i){
         <button class="read-toggle" type="button" data-read-index="${i}">○ 标记已读</button>
         <span class="read-state" data-read-state="${i}">未读</span>
       </div>
-      <div class="block"><b>这篇讲什么</b><p>${esc(p.summary)}</p></div>
-      <div class="block key"><b>为什么推荐给你</b><p>${esc(p.why)}</p></div>
-      <details>
-        <summary>展开精读提示</summary>
+      <div class="block compact-block"><b>这篇讲什么</b><p>${esc(p.summary)}</p></div>
+      <div class="block key compact-block"><b>为什么推荐给你</b><p>${esc(p.why)}</p></div>
+      <details class="paper-more">
+        <summary>展开完整解读</summary>
         <div class="block"><b>精读重点</b><p>${esc(p.focus)}</p></div>
         <div class="block"><b>和未来规划怎么接</b><p>${esc(p.future)}</p></div>
         ${p.overlap||p.gap?`<div class="block"><b>重复风险 / 研究空白</b><p>${esc(p.overlap)} ${esc(p.gap)}</p></div>`:""}
-      </details>
-      <details class="notes-panel">
-        <summary>我的问题 / 笔记</summary>
-        <textarea data-note-index="${i}" rows="5" placeholder="记下你对这篇论文的问题、疑点、可复现实验或与自己研究的连接……"></textarea>
-        <small>只保存在当前浏览器，不上传，也不会调用任何 AI 接口。</small>
+        <div class="notes-panel">
+          <b>我的问题 / 笔记</b>
+          <textarea data-note-index="${i}" rows="4" placeholder="记下疑点、复现实验或与自己研究的连接……"></textarea>
+          <small>只保存在当前浏览器。</small>
+        </div>
       </details>
       <a class="paper-link" href="${esc(p.url)}" target="_blank" rel="noreferrer">打开原文 / DOI <span>↗</span></a>
     </div>
@@ -141,11 +141,11 @@ function setupProgress(total){
 
 async function load(){
   const [c,a]=await Promise.all([
-    fetch("data/current.json?v=20260927-v8",{cache:"no-store"}).then(r=>r.json()),
-    fetch("data/archive.json?v=20260927-v8",{cache:"no-store"}).then(r=>r.json())
+    fetch("data/current.json?v=20260927-v9",{cache:"no-store"}).then(r=>r.json()),
+    fetch("data/archive.json?v=20260927-v9",{cache:"no-store"}).then(r=>r.json())
   ]);
   currentWeek=c.week;
-  const p0=c.papers.filter(p=>p.priority==="P0"),rest=c.papers.filter(p=>p.priority!=="P0");
+  const p0=c.papers.filter(p=>p.priority==="P0"),p1=c.papers.filter(p=>p.priority==="P1"),p2=c.papers.filter(p=>p.priority==="P2");
   const signals=(c.signals||[]).map((x,i)=>`<article><span>${String(i+1).padStart(2,"0")}</span><div><b>${esc(x.title)}</b><p>${esc(x.text)}</p></div></article>`).join("");
   const scope=(c.scope||[]).map(x=>`<b>${esc(x)}</b>`).join("");
   const order=(c.reading_order||[]).map((x,i)=>`<li><span>${String(i+1).padStart(2,"0")}</span><p>${esc(x)}</p></li>`).join("");
@@ -182,8 +182,13 @@ async function load(){
     </section>
 
     <section class="section reserve" id="reserve">
-      <div class="section-head"><div><p class="eyebrow">NEXT LAYER</p><h2>方法储备与视野拓展</h2></div><p>可以包含航空、OR、AI、CV，但必须能迁移成方法、实验、项目或新的研究视角。</p></div>
-      <div class="paper-grid count-${rest.length}">${rest.map((p,i)=>card(p,i+p0.length)).join("")}</div>
+      <div class="section-head"><div><p class="eyebrow">P1 · METHOD TRANSFER</p><h2>方法迁移</h2></div><p>这些论文不一定直接做旅客需求，但方法能迁移到你的航空 AI+OR、概率预测和生成建模。</p></div>
+      <div class="paper-grid count-${p1.length}">${p1.map((p,i)=>card(p,i+p0.length)).join("")}</div>
+    </section>
+
+    <section class="section horizon" id="horizon">
+      <div class="section-head"><div><p class="eyebrow">P2 · HORIZON</p><h2>视野拓展</h2></div><p>只保留真正能补 AI / CV / 推理能力的内容，不和主线论文混在一起。</p></div>
+      <div class="paper-grid count-${p2.length}">${p2.map((p,i)=>card(p,i+p0.length+p1.length)).join("")}</div>
     </section>
 
     <section class="section" id="actions">
