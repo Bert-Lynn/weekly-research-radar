@@ -2,26 +2,31 @@
 
 面向博士科研方向与个人技术成长的每周情报站。
 
-这不是“现有研究总结”，而是每周回答三个问题：
+## 站点架构
 
-1. **这周最值得读哪几篇？**
-2. **为什么它们和未来研究 / AI+OR 成长有关？**
-3. **读完以后应该留下什么可验证成果？**
+- **GitHub Pages 是唯一网页入口与部署平台**
+- **Supabase 只负责登录、会话、已读状态和私人笔记数据库**
+- 私人笔记不会写入公开 GitHub、Markdown 或周报 JSON
+- Higgsfield 不参与线上托管、登录或数据存储
 
-## 更新节奏
+## 每周更新
 
-- 每周五自动更新。
-- P0 必读最多 3 篇。
-- 每篇包含：中文简介、推荐理由、精读重点、未来连接、重复风险、研究空白和原文链接。
-- 不为了数量加入弱相关内容。
-- 每周保留历史归档，不覆盖旧周报。
+每周五自动更新，并按三层范围筛选：
+
+1. 航空旅客需求预测、选择行为、需求不确定性、鲁棒航班计划、机型指派；
+2. Transportation / OR / DFL / 概率预测 / 图学习 / 时空预测 / 行为 AI；
+3. AI / ML / CV 中对未来方法迁移、Demo、GitHub 项目或实习准备有价值的高水平工作。
 
 ## 目录
 
-- `index.html`：GitHub Pages 首页
-- `data/current.json`：当前周推荐
+- `index.html`：公开首页
+- `login.html`：GitHub Pages 内登录页
+- `workspace.html`：登录后的云端笔记周报
+- `cloud.js`：Supabase Edge Function 客户端
+- `data/current.json`：当前周公开推荐
 - `data/archive.json`：历史索引
-- `weekly/YYYY-MM-DD.md`：完整周报
-- `styles.css` / `app.js`：前端展示
+- `weekly/YYYY-MM-DD.md`：公开周报源文件
+- `weekly/YYYY-MM-DD.json`：结构化周报数据
+- `weekly/view.html`：周报阅读器
 
-当前一期：[`2026-09-22`](weekly/2026-09-22.md)
+当前一期：[`2026-09-25`](weekly/view.html?week=2026-09-25)
