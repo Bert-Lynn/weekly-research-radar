@@ -171,19 +171,19 @@ async function load(){
         </div>
       </div>
       <div class="signals-title"><span>WEEKLY SIGNALS</span><h2>这周我给你的 5 条判断</h2></div>
-      <div class="signals-grid">${signals}</div>
+      <div class="signals-grid count-${(c.signals||[]).length}">${signals}</div>
     </section>
 
     <section class="focus-strip"><span>筛选方向</span><b>航空 / 交通</b><b>Operations Research</b><b>AI / ML</b><b>Computer Vision</b><b>AI + OR</b></section>
 
     <section class="section" id="must">
       <div class="section-head"><div><p class="eyebrow">START HERE</p><h2>本周先读这 ${p0.length} 篇</h2></div><p>这里只放真正会影响你的研究边界或未来方法线的论文。P0 与下面的拓展阅读分开处理。</p></div>
-      <div class="paper-grid featured">${p0.map((p,i)=>card(p,i)).join("")}</div>
+      <div class="paper-grid featured count-${p0.length}">${p0.map((p,i)=>card(p,i)).join("")}</div>
     </section>
 
     <section class="section reserve" id="reserve">
       <div class="section-head"><div><p class="eyebrow">NEXT LAYER</p><h2>方法储备与视野拓展</h2></div><p>可以包含航空、OR、AI、CV，但必须能迁移成方法、实验、项目或新的研究视角。</p></div>
-      <div class="paper-grid">${rest.map((p,i)=>card(p,i+p0.length)).join("")}</div>
+      <div class="paper-grid count-${rest.length}">${rest.map((p,i)=>card(p,i+p0.length)).join("")}</div>
     </section>
 
     <section class="section" id="actions">
