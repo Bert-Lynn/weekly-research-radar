@@ -167,7 +167,7 @@ function setupProgress(papers){
 }
 
 async function load(){
-  const c=await fetch("data/current.json?v=20260927-v12",{cache:"default"}).then(r=>{
+  const c=await fetch("data/current.json?v=20261002-v1",{cache:"default"}).then(r=>{
     if(!r.ok)throw new Error("current_failed");
     return r.json();
   });
@@ -231,7 +231,7 @@ async function load(){
   setupProgress(c.papers);
 
   // Do not block current-week content on archive data.
-  fetch("data/archive.json?v=20260927-v12",{cache:"default"})
+  fetch("data/archive.json?v=20261002-v1",{cache:"default"})
     .then(r=>r.ok?r.json():[])
     .then(a=>{
       const box=document.querySelector("#archive-list");
