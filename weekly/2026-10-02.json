@@ -1,0 +1,204 @@
+{
+  "week": "2026-10-02",
+  "label": "Week 03 · 决策接口周",
+  "updated_at": "2026-10-02",
+  "purpose": "优先扫描航空旅客需求、选择行为、需求不确定性、鲁棒航班计划与机型指派；直接新增不足时，扩展到 OR / DRO / 概率预测与 CV 方法迁移。",
+  "freshness_note": "本周直接航空学术论文新增有限，因此采用“两项直接相关 + 两项方法迁移 + 一项视野拓展”的完整批次；不使用低质量内容凑数。",
+  "weekly_summary": "本周最重要的变化不是再增加一个预测模型，而是把“选择行为—不确定需求—优化决策”的接口进一步具体化。航空侧，最新 choice network revenue management 工作说明：一旦旅客购买概率由离散选择模型驱动，下游网络收益管理的核心难点会同时落在选择集合重叠、动态规划近似与可计算性上；IATA 9 月 30 日公布的 8 月数据又显示，全球需求同比下降 0.8%，地区差异极大，提醒我们不能把需求不确定性只当成同方差噪声。方法侧，TimeES 用 evolutionary spectra 同时做确定性与概率预测，C-DRCCP 把上下文信息直接写进 Wasserstein 条件机会约束，而 RECAST 则展示了视觉语义如何被压缩成可优化的 cost map。共同信号是：未来模型应从“预测一个数”升级为“根据当前 context 生成对下游决策真正有用的分布、场景或代价表示”，并用 regret、可靠性和求解效率共同验收。",
+  "scope": [
+    "直接相关 · Airline choice / demand / revenue management",
+    "方法迁移 · Distributionally Robust Optimization",
+    "方法迁移 · Probabilistic Time-Series Forecasting",
+    "视野拓展 · Computer Vision / Robot Navigation"
+  ],
+  "signals": [
+    {
+      "title": "01 离散选择结构会直接改变航空优化的可计算性",
+      "text": "BSE 2026 的 choice network RM working paper表明，即使是 MNL 客户选择，考虑重叠 consideration sets 后，常用近似的求解难度也会显著上升；行为模型不能只在预测端评价。"
+    },
+    {
+      "title": "02 航空需求的不确定性正在呈现明显 context / regime 差异",
+      "text": "IATA 2026-09-30 报告显示 8 月全球 RPK 同比 -0.8%，但中国国内 +5.8%、印度国内 -7.5%、中东航空公司 -14.6%；单一全局误差分布很难描述这种异质性。"
+    },
+    {
+      "title": "03 概率预测正在回到“随机过程结构”而非只换生成模型",
+      "text": "TimeES 用 evolutionary spectra 显式建模非平稳随机过程，在同一框架下给出点预测与概率预测，并报告在最具挑战的概率预测基准上平均优于近期基线 17.23%。"
+    },
+    {
+      "title": "04 DRO 可以直接条件化到当前市场状态",
+      "text": "C-DRCCP 在 joint context–outcome Wasserstein ambiguity set 上控制条件违约概率，并给出精确 MIP reformulation 与有限样本保证，适合连接 regime/context-aware demand 与鲁棒计划。"
+    },
+    {
+      "title": "05 CV/具身最值得学的是“感知输出如何变成决策代价”",
+      "text": "RECAST 把 VLM/VFM 的语义判断压成 Actionable Cost Map，再用于轨迹生成和筛选；这种 perception→cost→optimization 的接口比单纯追视觉 backbone 更贴近 AI+OR 转型。"
+    }
+  ],
+  "reading_order": [
+    "先读 BSE choice network revenue management：重点看 MNL 选择结构怎样改变动态规划近似、复杂度与线性规划表达。",
+    "第二读 C-DRCCP：把“需求预测→鲁棒优化”升级为“context-conditioned uncertainty→robust chance constraint”。",
+    "第三读 TimeES：判断 evolutionary spectra 是否比 VAE / diffusion 更适合非平稳航空需求分布与场景生成。",
+    "第四看 IATA 8 月市场报告：用于检查需求异质性、regime 划分与外生冲击是否有现实依据。",
+    "最后读 RECAST Figure 2：只学 perception→cost map→action 这一工程接口，为未来 CV/具身 demo 服务。"
+  ],
+  "papers": [
+    {
+      "priority": "P0",
+      "lane": "直接相关 · 选择行为 × 航空优化",
+      "title": "A New Compact Linear Programming Formulation for Choice Network Revenue Management",
+      "authors": "Sumit Kunnumkal; Kalyan Talluri",
+      "venue": "Barcelona School of Economics Working Paper 677",
+      "year": "September 2026",
+      "published_at": "2026-09 · BSE Working Paper 677",
+      "level": "高质量研究机构 Working Paper；航空收益管理 / OR 直接相关；尚非同行评审期刊版本",
+      "url": "https://bse.eu/research/working-papers/new-compact-linear-programming-formulation-choice-network-revenue-management",
+      "summary": "研究由客户离散选择驱动的 network revenue management。作者从动态规划的 affine relaxation 出发，证明即使单 segment MNL 情形该 relaxation 也可为 NP-complete，但进一步构造出一个新的紧凑线性规划，其界严格位于传统 CDLP 与 affine relaxation 之间，并在数值实验中经常接近后者。",
+      "data_method": "理论复杂度分析 + 动态规划近似 + compact LP + overlapping consideration sets 下的 product cuts + 数值比较。",
+      "results": "新 compact LP 比 CDLP 更紧，同时保留紧凑表达；对 consideration sets 重叠的情形，部分强 product cuts 仍有效。",
+      "evidence": "中-强：BSE 高质量 working paper，理论与数值实验完整；但仍属于 working paper，尚未经过期刊同行评审。",
+      "why": "这篇把旅客选择模型与航空下游优化真正放在同一个计算问题里。价值不在复制 revenue management 场景，而在理解复杂行为结构进入航班/运力优化后会怎样影响 tractability、relaxation quality 和可解释结构。",
+      "focus": "精读动态规划→CDLP→affine relaxation→新 compact LP 的层级关系；弄清 NP-complete 结果针对什么结构、product cuts 为什么在重叠 consideration sets 下仍可用。",
+      "future": "把现有选择模型先接到一个极简 airline capacity / assortment / frequency decision 问题，比较 MNL 与扩展行为模型对最优决策、LP relaxation 和求解时间的影响。",
+      "overlap": "与现有选择行为主线重叠在 MNL/choice probability，但本文不是行为估计论文，而是 choice-driven network optimization。",
+      "gap": "复杂行为机制带来的拟合增益，是否值得它在下游航空优化中新增的非凸性、不可分性或计算成本。",
+      "figure": {
+        "mode": "redraw"
+      }
+    },
+    {
+      "priority": "P0",
+      "lane": "直接相关 · 航空需求技术报告",
+      "title": "Air Passenger Market Analysis — August 2026",
+      "authors": "International Air Transport Association (IATA)",
+      "venue": "IATA Economics",
+      "year": "2026-09-30",
+      "published_at": "2026-09-30",
+      "level": "权威行业技术报告；非同行评审论文",
+      "url": "https://www.iata.org/en/publications/economics/reports/air-passenger-market-analysis-august-2026/",
+      "summary": "IATA 报告显示，2026 年 8 月全球 RPK 同比下降 0.8%，ASK 增长 0.3%，客座率降至 85.1%（同比 -0.9 个百分点）。区域差异显著：中东航空公司需求 -14.6%，北美 -2.2%，拉美 +5.3%；国内市场中中国 +5.8%，印度 -7.5%，美国 -2.9%。",
+      "data_method": "IATA 全球定期航空市场统计，以 RPK、ASK、PLF 对全球、区域、国际和主要国内市场进行同比比较。",
+      "results": "整体需求轻微收缩，但各地区和国内市场方向差异很大；IATA 同时指出高能源价格与地缘政治不确定性可能影响未来旅行预算。",
+      "evidence": "强现实证据：IATA 为权威行业统计源；用于现实需求背景与 regime/context 识别，不应用作方法论因果证据。",
+      "why": "这不是把行业报告当学术论文，而是用最新现实数据检查需求模型假设。当前市场同时存在正增长、负增长和大幅冲击，非常适合支持 regime-aware、context-aware 与异方差不确定性建模。",
+      "focus": "只看区域/国内市场 RPK、ASK、PLF 的分化，以及 IATA 对能源价格和地缘政治的解释；不要在这份报告上花大量精读时间。",
+      "future": "把 market-level regime/context 标签设计为地缘区域、容量变化、价格/能源环境与恢复阶段，并检验不同 context 下 forecast residual distribution 是否显著不同。",
+      "overlap": "与上周 Heathrow regime-switching 论文主题相近，但这一项提供最新实时行业证据，而不是新的预测方法。",
+      "gap": "把行业层面的 regime 差异下沉到 O-D / airport-pair / carrier-market 层面，并验证 context-conditioned residual / ambiguity set。",
+      "figure": {
+        "mode": "redraw",
+        "figure_no": "August 2026 regional/domestic market table → result chart",
+        "source": "IATA Air Passenger Market Analysis — August 2026",
+        "source_url": "https://www.iata.org/en/publications/economics/reports/air-passenger-market-analysis-august-2026/",
+        "caption_zh": "重绘 2026 年 8 月全球、主要区域与国内市场的 RPK 同比变化，突出中东、印度、中国、北美等市场方向分化。",
+        "look": "看同一月份不同市场的需求变化符号和幅度是否一致；如果不一致，单一全局误差分布或统一 regime 假设就值得质疑。"
+      }
+    },
+    {
+      "priority": "P1",
+      "lane": "方法迁移 · 概率预测 / 非平稳时间序列",
+      "title": "TimeES: Probabilistic and Deterministic Time Series Forecasting via Evolutionary Spectra",
+      "authors": "Weiwei Ye; Renhe Jiang; Hangchen Liu; Dongyuan Li; Yoshihide Sekimoto",
+      "venue": "arXiv:2609.32384",
+      "year": "2026-09-26",
+      "published_at": "2026-09-26",
+      "level": "最新 ML / 时序预印本；有公开代码；尚未同行评审",
+      "url": "https://arxiv.org/abs/2609.32384",
+      "code_url": "https://github.com/wwy155/TimeES",
+      "summary": "TimeES 将 evolutionary spectra 理论参数化为可学习的 Discrete Evolutionary Spectra，用同一随机过程表示同时支持 deterministic 与 probabilistic forecasting。框架显式估计随时间变化的频谱幅值，并通过 Hermitian symmetry 与频谱能量稀疏性把复杂度从 O(NM) 降到 O(NK)。",
+      "data_method": "Evolutionary spectra 理论 + 参数化随机频谱生成 + 简单线性 backbone + 多个确定性/概率时序基准。",
+      "results": "论文报告 TimeES 在确定性和概率预测上均取得一致的 SOTA 表现；在最具挑战的概率预测 benchmark 上平均优于近期基线 17.23%，同时保持较高效率和可解释性。",
+      "evidence": "中：新 arXiv 预印本且有代码，理论与 benchmark 完整；尚未同行评审，需自己复现实验确认。",
+      "why": "它和航空需求不确定性方向的连接非常直接：不是简单套 VAE/diffusion，而是从非平稳随机过程出发，把可预测周期结构和随机波动分开。",
+      "focus": "先看 Figure 1 的失败案例，再看 Figure 2 与 Eq.(3)/(4)：A(t,ω)、物理相位矩阵 F、随机向量 w 各自代表什么；最后看概率预测如何评价 calibration 与 sharpness。",
+      "future": "在 O-D 月度需求上做 TimeES vs point model vs VAE/diffusion，除 CRPS/quantile loss 外再比较生成场景进入鲁棒航班计划后的 downstream regret。",
+      "overlap": "与现有概率需求 / 场景生成方向直接重叠，但随机过程建模出发点不同于 VAE、KDE 和 flow matching。",
+      "gap": "航空 demand 的 regime switch、carrier competition 与 seasonality 是否能在 evolutionary spectra 中形成可解释频率/振幅变化，需要实证验证。",
+      "figure": {
+        "mode": "redraw",
+        "figure_no": "Figure 2",
+        "source": "TimeES arXiv:2609.32384",
+        "source_url": "https://arxiv.org/abs/2609.32384",
+        "caption_zh": "根据 TimeES Figure 2 重绘：网络估计时间变化的幅值矩阵 A，再与物理相位矩阵 F 和随机 realization w 合成未来序列，从而统一点预测与概率预测。",
+        "look": "重点区分 A、F、w 三类信息：哪些是可学习的时间变化结构，哪些是固定物理频率基，哪些专门承载随机性。"
+      }
+    },
+    {
+      "priority": "P1",
+      "lane": "方法迁移 · Contextual DRO",
+      "title": "Contextual Distributionally Robust Chance-Constrained Programs: Exact Reformulations and Valid Inequalities",
+      "authors": "Hanbin Yang; Nan Jiang; Guodong Lyu",
+      "venue": "arXiv:2609.23739",
+      "year": "2026-09-20 · updated 2026-09-22",
+      "published_at": "2026-09-20",
+      "level": "最新数学优化预印本；DRO / chance constraints 直接方法相关；尚未同行评审",
+      "url": "https://arxiv.org/abs/2609.23739",
+      "summary": "提出 contextual distributionally robust chance-constrained programming：在 context 与 outcome 的联合分布上构造 Wasserstein ambiguity set，并在目标 context 的邻域内控制条件违约概率。对 RHS uncertainty 推导精确 MIP reformulation、有限样本保证以及强化 valid inequalities。",
+      "data_method": "联合 context–outcome Wasserstein ambiguity set + 条件 chance constraint + 精确 MIP reformulation + strengthened quantile cuts / rank inequalities + capacitated transportation 与麻醉医师部署案例。",
+      "results": "论文报告强化 formulation 在 108 个运输实例上的平均 root gap 为 0.69%，基线为 89.48%；当 N=1000 时，强化模型 12 个实例全部求解，median 39.67 秒，而基线均达到 1 小时时限。",
+      "evidence": "中-强：理论推导、统计保证与大规模计算实验完整；但当前为 arXiv 预印本。",
+      "why": "这是“需求不确定性 → 鲁棒航班计划”最值得吸收的本周方法。关键不是再换 ambiguity set，而是让 uncertainty set 随当前 context 改变，避免所有市场月份都用同一个最坏分布。",
+      "focus": "精读联合 Wasserstein budget 的两种用途：把样本质量移入 conditioning neighborhood，以及把条件样本推向 failure region；再看 γ、ε、θ 三个参数分别控制什么。",
+      "future": "构造 airline context x（市场规模、季节、运价、区域冲击、容量状态）和 demand error y，把固定 ambiguity set 改成 context-conditioned set，先在简化 fleet/capacity allocation 上验证 cost–reliability trade-off。",
+      "overlap": "与现有 DRO / 鲁棒计划高度重叠，但新增的是 context-conditioned risk，不是静态全样本 ambiguity set。",
+      "gap": "航空里最关键的问题是 context 如何定义、局部样本量不足如何校准，以及多市场相关需求是否仍能保持可解性。",
+      "figure": {
+        "mode": "redraw",
+        "figure_no": "Conceptual redraw from model (2) and transport-budget interpretation",
+        "source": "C-DRCCP arXiv:2609.23739",
+        "source_url": "https://arxiv.org/abs/2609.23739",
+        "caption_zh": "重绘 contextual Wasserstein 运输预算：一部分预算把经验样本移入目标 context 邻域，剩余预算再把条件样本推向 failure region；鲁棒可行性由到达风险边界所需的最小运输成本决定。",
+        "look": "看 context 不是简单做权重，而是与 outcome failure transport 共享同一个 Wasserstein budget。"
+      }
+    },
+    {
+      "priority": "P2",
+      "lane": "视野拓展 · CV/具身 × 决策接口",
+      "title": "RECAST: Recasting Vision-Language Semantics into an Actionable Cost Map for Robot Navigation",
+      "authors": "Incheol Cho; Jintae Park; Jinkyu Kim; Jungbeom Lee; Jaegul Choo; Seokha Moon",
+      "venue": "arXiv:2609.32595",
+      "year": "2026-09-26",
+      "published_at": "2026-09-26",
+      "level": "最新机器人 / 视觉预印本；Korea University / KAIST 等；尚未同行评审",
+      "url": "https://arxiv.org/abs/2609.32595",
+      "project_url": "https://recast-nav.github.io/",
+      "summary": "RECAST 让 VLM 判断 terrain traversability、collision risk、heading preference 与 passable gaps，再用视觉基础模型将这些语义判断空间落地，合成为 Actionable Cost Map；cost map 同时条件化轨迹 decoder 并用于候选轨迹打分。",
+      "data_method": "VLM 语义推理 + vision foundation model 空间 grounding + pivot/current 双 cost map + 多模态 trajectory decoder + 仿真与真实四足机器人实验。",
+      "results": "相对最强先前方法，success rate 在仿真提升 13.3 个百分点、真实四足机器人提升 31.4 个百分点；collision rate 分别下降 9.6 和 14.3 个百分点。",
+      "evidence": "中：新预印本但有真实机器人实验和明确量化结果；尚未同行评审。",
+      "why": "它不是航空研究论文，但非常适合技术转型：视觉系统真正有价值的接口不是输出一个 embedding，而是把语义变成可以被规划器直接消费的代价结构。",
+      "focus": "只精读 Figure 2：四类 VLM judgment → VFM grounding → pivot/current cost map → candidate trajectories → scoring/execution；本周不用深挖全部机器人控制细节。",
+      "future": "做一个小型视觉 planning demo：输入道路/场景图像和自然语言约束，输出二维 cost map，再用 A* / sampling planner 生成路径。",
+      "overlap": "与当前航空主线无直接重合；它服务于未来 CV/具身实习和 AI+OR 工程能力。",
+      "gap": "价值是“把感知转成优化接口”的设计范式，而不是把机器人导航包装成航空创新。",
+      "figure": {
+        "mode": "redraw",
+        "figure_no": "Figure 2",
+        "source": "RECAST arXiv:2609.32595",
+        "source_url": "https://arxiv.org/abs/2609.32595",
+        "caption_zh": "根据 RECAST Figure 2 重绘：VLM 四类语义判断经 VFM 空间落地后生成 pivot/current Actionable Cost Map，再用于轨迹生成、候选评分与执行。",
+        "look": "看语义如何从自然语言和图像跨过中间表示，最终变成规划器可以直接加总、比较和优化的 cost。"
+      }
+    }
+  ],
+  "actions": [
+    {
+      "title": "做 O-D residual 的 context 异质性检查",
+      "time": "90 min",
+      "deliverable": "选至少 30 个 market，按月份/区域/容量变化或自定义 regime 分组，比较 residual mean、variance、quantiles；验收：1 张分组图 + 1 个分布差异检验表 + 是否需要 context-conditioned uncertainty 的结论。"
+    },
+    {
+      "title": "复现 TimeES 最小概率预测实验",
+      "time": "3–4 h",
+      "deliverable": "跑通官方代码或最小实现，在一个公开时序数据集和一个航空需求子集上输出 MAE/RMSE、CRPS/Pinball、区间覆盖率；验收：可复现 README + requirements + 固定随机种子 + 结果表。"
+    },
+    {
+      "title": "把固定鲁棒集改成 contextual ambiguity toy model",
+      "time": "2–3 h",
+      "deliverable": "用 2–3 个 context 建立简化 capacity/fleet allocation C-DRCCP toy model；验收：固定 ambiguity set vs contextual set 的 cost、violation rate、solve time 对比。"
+    },
+    {
+      "title": "做 perception→cost map→planner 的 CV Demo",
+      "time": "3 h",
+      "deliverable": "任选 5–10 张道路/室内图，构造 traversability/risk cost map，再用 A* 规划；验收：GitHub repo 中至少 1 个可运行 notebook/script、5 个输入输出示例和 README 架构图。"
+    }
+  ]
+}
