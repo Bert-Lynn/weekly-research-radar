@@ -1,0 +1,485 @@
+{
+  "version": 1,
+  "updated_at": "2026-10-11",
+  "guides": [
+    {
+      "paper_key": "https://doi.org/10.1016/j.trc.2026.105941",
+      "updated_at": "2026-10-11",
+      "verification_note": "本次核验为摘要级：已读取出版社搜索索引中的摘要、亮点、卷期与数据声明；正文直接访问返回403，未重新核定实验表格。卷期为2027年1月，线上首发日仍未获一手确认；保留补充阅读定位。",
+      "sections": [
+        {
+          "id": "problem",
+          "title": "研究问题：新航线怎样给出有用的范围？",
+          "text": "新航线历史少，照搬成熟航线规律可能失准；只给一个人数，又不足以安排保障资源。教学例子：新开旅游航线只有少量观测，既要估计乘客，也要估计行李，而且两者必须符合业务规则。作者把“借用其他航线经验”和“限制不合理输出”放进同一个少样本预测流程。",
+          "source_urls": [
+            "https://www.sciencedirect.com/science/article/pii/S0968090X26004274"
+          ]
+        },
+        {
+          "id": "method",
+          "title": "方法拆解：先学共性，再适配新航线",
+          "text": "1. 让大模型在业务约束下搜索候选推断，用过程奖励模型（PRM）评价中间推断的质量。\n2. 把筛选后的预测当作伪标签，即模型生成的训练目标；通过课程式自训练学习这些监督。\n3. 用MAML元学习寻找容易适配的初始化，而非为每条新航线从头训练。\n4. 收到新航线少量真实样本后适配，联合输出乘客、行李的点预测与区间半宽。\n这是摘要能确认的结构，具体门控、损失与训练细节仍需全文。",
+          "source_urls": [
+            "https://www.sciencedirect.com/science/article/pii/S0968090X26004274"
+          ]
+        },
+        {
+          "id": "experiments",
+          "title": "实验与结果：本次证据能支持什么",
+          "text": "出版社摘要称，在真实冷启动航线数据上，方法取得较好的覆盖率与宽度折中，并保持有竞争力的点预测。摘要未列样本规模、基线表和置信区间；因此本讲解不把既有周报数字当作本次独立复核的实验结果。",
+          "source_urls": [
+            "https://www.sciencedirect.com/science/article/pii/S0968090X26004274"
+          ]
+        },
+        {
+          "id": "limitations",
+          "title": "局限与边界：可行性和可靠性分开看",
+          "text": "作者披露：无权公开实验数据。\n我们的判断：符合业务规则，只能排除一部分不合理预测；区间够窄，也不代表覆盖充分。还需在相同目标覆盖率下比较宽度，并检查冷启动航线的时间划分。摘要不足以判断各模块是否都有独立增益。",
+          "source_urls": [
+            "https://www.sciencedirect.com/science/article/pii/S0968090X26004274"
+          ]
+        },
+        {
+          "id": "transfer",
+          "title": "迁移建议：先检验规则到底帮了什么",
+          "text": "我们的建议：先在公开或合成需求上做小实验，比较无约束预测、输出后裁剪、约束搜索；固定数据与样本量。除了误差，报告规则违约率、区间覆盖与宽度，再用固定容量策略统计短缺成本。这样能分辨改善来自预测信息还是单纯限制输出；这是建议实验，并非论文已证明的航空收益。",
+          "source_urls": [
+            "https://www.sciencedirect.com/science/article/pii/S0968090X26004274"
+          ]
+        },
+        {
+          "id": "reading_path",
+          "title": "阅读路径",
+          "text": "先读摘要和亮点，画出离线学习、在线适配两阶段。取得全文后，优先核对数据切分、区间指标、模块消融及支持样本量实验，再读搜索细节。",
+          "source_urls": [
+            "https://www.sciencedirect.com/science/article/pii/S0968090X26004274"
+          ]
+        },
+        {
+          "id": "reproducibility",
+          "title": "复现准备",
+          "text": "实验数据不可共享；本次未验证到官方代码及其许可，不能承诺完整复现。检索时务必带上完整标题与作者：同名FlightLLM还用于FPGA推理和飞行安全研究，不应误连仓库。",
+          "source_urls": [
+            "https://www.sciencedirect.com/science/article/pii/S0968090X26004274"
+          ]
+        }
+      ],
+      "sources": [
+        {
+          "label": "出版社摘要、方法亮点、卷期与数据声明（索引可读；正文未通）",
+          "url": "https://www.sciencedirect.com/science/article/pii/S0968090X26004274"
+        }
+      ],
+      "coverage": "abstract_only"
+    },
+    {
+      "paper_key": "https://santini.in/files/papers/santini-vaze-2026.pdf",
+      "updated_at": "2026-10-11",
+      "verification_note": "已核作者2026-08-07全文及表3—5；作者主页标注Transportation Science已接受、待刊。作者在Optimization Online的公开记录始于2025-02-17，属于历史补充，非本周新作。",
+      "sections": [
+        {
+          "id": "problem",
+          "title": "研究问题：改班表，也会改变旅客选择",
+          "text": "教学例子：把支线航班提前，可能接上更受欢迎的干线，也可能让本地旅客不愿乘坐。因此，班次、时刻和机型不能各自优化后再拼接。作者研究固定干线时刻下的支线中期计划，把旅客对整组航班的选择一并计算。",
+          "source_urls": [
+            "https://santini.in/files/papers/santini-vaze-2026.pdf"
+          ]
+        },
+        {
+          "id": "method",
+          "title": "方法拆解：把整组航班当作一个选择",
+          "text": "1. 为一个机场对定义整日航班方案，包含班次、时刻、机型与旅客流量，称为一列。\n2. 局部用一般吸引力选择模型计算客流，允许旅客转向其他出行方式或不出行。\n3. 网络主问题从各机场对选方案，并满足飞机数量和时空流平衡。\n4. 主问题的对偶价格提示哪里值得增加候选；动态规划先找有希望的列，必要时解精确定价模型。\n5. 最后在已生成列中求整数方案。列生成解松弛，与最终整数解的质量证明须分开。",
+          "source_urls": [
+            "https://santini.in/files/papers/santini-vaze-2026.pdf"
+          ]
+        },
+        {
+          "id": "experiments",
+          "title": "实验与结果：解的质量和证明成本",
+          "text": "7个美国支线网络实例，最大1002航班、346架飞机（第17页，表3）。表4四个大实例在3小时内取得整数解，间隙为0.00%—0.12%；但作为参照的完整松弛界另跑至收敛，总列生成耗时分别为5小时7分、15小时39分、5小时38分、11小时9分（第17—18页）。\n表5联合网络：固定班次、仅调时刻和机型，模型利润提高4.39%；允许各航段班次增减2班且撤销航段时提高21.40%，约39.6万美元/日。基准也由模型重算，不能视为已实现收益（第20—21页）。",
+          "source_urls": [
+            "https://santini.in/files/papers/santini-vaze-2026.pdf"
+          ]
+        },
+        {
+          "id": "limitations",
+          "title": "局限与边界：分解依赖哪些简化？",
+          "text": "作者明确假设干线时刻固定，并把涉及两段支线的市场拆为独立市场，以便局部利润可分解；附录J检查其影响。附录I还显示，中转偏好偏差较大时收益会被稀释。\n我们的判断：迁移到复杂联程网络前，先检验这些简化；紧松弛不能弥补选择模型或需求输入失真。",
+          "source_urls": [
+            "https://santini.in/files/papers/santini-vaze-2026.pdf"
+          ]
+        },
+        {
+          "id": "transfer",
+          "title": "迁移建议：先找出能够封装的局部决策",
+          "text": "我们的建议：在小网络比较逐航班模型与“机场对整日方案”模型，固定需求、时限和可调整范围。先看列数量、可行解、界与间隙，再接概率需求场景，检验方案在样本外的利润与旅客流失。后一步是扩展设想，原模型并非分布鲁棒优化。",
+          "source_urls": [
+            "https://santini.in/files/papers/santini-vaze-2026.pdf"
+          ]
+        },
+        {
+          "id": "reading_path",
+          "title": "阅读路径",
+          "text": "先读§3假设，再读§4.1主问题与§4.2.1选择接口；看表4脚注理解计时，最后用表5区分调时刻、改班次、撤航段三类权限。",
+          "source_urls": [
+            "https://santini.in/files/papers/santini-vaze-2026.pdf"
+          ]
+        },
+        {
+          "id": "reproducibility",
+          "title": "复现准备",
+          "text": "附录B列出BTS与FAA数据和预处理；§6说明C++、Gurobi 9.0.0。作者主页此项只列预印本，本次未核定官方实现、整理后实例及其许可。可以独立构造教学算例，但不能称完整复现。",
+          "source_urls": [
+            "https://santini.in/files/papers/santini-vaze-2026.pdf",
+            "https://santini.in/"
+          ]
+        }
+      ],
+      "sources": [
+        {
+          "label": "作者全文：§3—6、表3—5、附录B/I/J",
+          "url": "https://santini.in/files/papers/santini-vaze-2026.pdf"
+        },
+        {
+          "label": "作者主页：期刊已接受、待刊状态",
+          "url": "https://santini.in/"
+        },
+        {
+          "label": "作者公开预印本记录：2025-02-17",
+          "url": "https://optimization-online.org/2025/02/integrated-schedule-planning-for-regional-airlines-using-column-generation/"
+        }
+      ],
+      "coverage": "full_text"
+    },
+    {
+      "paper_key": "https://arxiv.org/abs/2610.10076",
+      "updated_at": "2026-10-11",
+      "verification_note": "已核arXiv v1全文、§4.2、§5.3表1与§6；首投2026-10-07 13:41 UTC。本周新预印本，未核验会议或期刊录用；论文采用CC BY 4.0，代码尚待提供。",
+      "sections": [
+        {
+          "id": "problem",
+          "title": "研究问题：整体准确，会掩盖关键事件吗？",
+          "text": "教学例子：一个需求模型在普通日子表现很好，却总把超容量日预测得过于严重。全体样本的校准图可能看不出来。论文把问题分成两层：事件出现得有多频繁，以及事件真的发生后，数值会落在哪里。只修正发生概率，未必修正严重程度。",
+          "source_urls": [
+            "https://arxiv.org/html/2610.10076v1"
+          ]
+        },
+        {
+          "id": "method",
+          "title": "方法拆解：先修形状，再修概率质量",
+          "text": "1. 预先划定结果区间，如电价小于零与若干非负区间。\n2. 对落在各区间内的观测，计算条件PIT，即观测在该区间预测分布中的分位位置。\n3. 分区用保序回归学习单调变换，修正区间内分布形状。\n4. 迭代调整各区间的概率质量，使平均预测频率匹配校准样本中的发生频率；最后拼接为合法连续分布（§4.2、附录B）。\n这是已有概率模型的后处理层，不需要重新训练原预测器。",
+          "source_urls": [
+            "https://arxiv.org/html/2610.10076v1"
+          ]
+        },
+        {
+          "id": "experiments",
+          "title": "实验与结果：严重程度校准改善，平均评分略降",
+          "text": "德国日前电价实验在2019—2020年测试DDNN-JSU；每周用过去182天的样本外预测拟合校准器，再用于下一周。负电价单独成组（§5.3）。\n表1：负电价组校准误差从0.0611降到0.0051，按表值计算降91.7%；整体CRPS从2.65升至2.70欧元/MWh，约恶化1.9%。事件发生比从0.939变为1.050，理想值为1。改善主要体现在负电价发生后的分布，不能写成所有指标全面提升。",
+          "source_urls": [
+            "https://arxiv.org/html/2610.10076v1"
+          ]
+        },
+        {
+          "id": "limitations",
+          "title": "局限与边界：样本内性质不是未来保证",
+          "text": "作者§6把样本外条件校准保证列为后续研究；§4.2也说明局部校准不必推出整体校准。区间越细，所需样本越多。\n我们的判断：罕见超容量样本很少或需求漂移时，半年窗口未必合适。按结果划分的校准也不等于对每条航线、每个日期都有效。",
+          "source_urls": [
+            "https://arxiv.org/html/2610.10076v1"
+          ]
+        },
+        {
+          "id": "transfer",
+          "title": "迁移建议：为容量决策增加一层检验",
+          "text": "我们的建议：先固定一个容量阈值，按时间划分训练、校准、测试，比较原分布、全局校准与分区校准。同时检查超容量发生比、超出量分布、整体CRPS和固定资源策略成本。航空人数是离散计数，原文主要使用连续分布，条件PIT与端点处理需另行验证；论文没有证明航空调度收益。",
+          "source_urls": [
+            "https://arxiv.org/html/2610.10076v1"
+          ]
+        },
+        {
+          "id": "reading_path",
+          "title": "阅读路径",
+          "text": "先看§5.3图2和表1，理解频率与严重程度的差异；再读§3定义、§4.2拼接方法与附录B实现，最后读§6的保证边界。",
+          "source_urls": [
+            "https://arxiv.org/html/2610.10076v1"
+          ]
+        },
+        {
+          "id": "reproducibility",
+          "title": "复现准备",
+          "text": "作者声明完整实验代码将在录用后提供；本次未验证可用官方仓库及代码许可。附录C列出10个UCI/OpenML数据集，但电价实验完整材料尚未核定。论文CC BY 4.0不等于数据或代码采用同一许可；独立实现应标注概念验证。",
+          "source_urls": [
+            "https://arxiv.org/html/2610.10076v1",
+            "https://creativecommons.org/licenses/by/4.0/"
+          ]
+        }
+      ],
+      "sources": [
+        {
+          "label": "arXiv：首投日期与版本记录",
+          "url": "https://arxiv.org/abs/2610.10076"
+        },
+        {
+          "label": "原文：§3—6、表1、附录B/C、代码声明",
+          "url": "https://arxiv.org/html/2610.10076v1"
+        },
+        {
+          "label": "论文的CC BY 4.0许可",
+          "url": "https://creativecommons.org/licenses/by/4.0/"
+        }
+      ],
+      "coverage": "full_text"
+    },
+    {
+      "paper_key": "https://arxiv.org/abs/2610.10440",
+      "updated_at": "2026-10-11",
+      "coverage": "full_text",
+      "verification_note": "2026-10-11 核验 arXiv v1 全文、表1及附录；首投为2026-10-07，仍按预印本介绍，未核验录用。官方代码链接已尝试访问，但未读到仓库内容；未下载数据或运行代码。",
+      "sections": [
+        {
+          "id": "problem",
+          "title": "问题与直觉",
+          "text": "研究的是新观测不断到来时，怎样低成本刷新未来多步的概率分布。通常每次都从随机噪声重新生成，少算几步又容易损失质量。\n直观类比：每小时更新未来十小时的机场客流，上一轮的多条可能轨迹仍有参考价值。沿用它们或许更快，但也会把旧误差带入下一轮。这是帮助理解的航空例子，论文没有做航空实验。",
+          "source_urls": [
+            "https://arxiv.org/html/2610.10440v1"
+          ]
+        },
+        {
+          "id": "method",
+          "title": "方法拆解",
+          "text": "1. 首轮从噪声生成多条未来轨迹。\n2. 新观测到来后，将旧轨迹前移并补齐末端，加入部分噪声，作为本轮生成的起点。\n3. 条件流根据真实观测历史，把这些起点变成更新后的轨迹；旧预测进入的是流的源分布。\n4. 训练时也让模型短程自滚动，接触自身产生的误差；用参数滑动平均副本及停止梯度稳定训练。",
+          "source_urls": [
+            "https://arxiv.org/html/2610.10440v1"
+          ]
+        },
+        {
+          "id": "experiments",
+          "title": "实验与结果怎样读",
+          "text": "§4.1—4.3、表1：模拟 Beam Spill 每次预测10步，均为3次神经网络函数评估（NFE）时，Seq-Flow 的 CRPS 为0.015，完整轨迹 Flow 为0.036，降低58.3%；摘要约65%对应 Diffusion 的0.043。CRPS 越低，整体概率预测越好，不等于每种风险事件都校准。最多4次训练自滚动，在长度430的束流序列上检验递归稳定性；另测随机游走和两种流体任务。",
+          "source_urls": [
+            "https://arxiv.org/html/2610.10440v1"
+          ]
+        },
+        {
+          "id": "limitations",
+          "title": "作者边界与解读",
+          "text": "作者§5明确：自滚动增加训练成本。我们的解读：少量NFE不能直接换算成相同倍数的实际加速；模拟束流的连续更新结果，也不是真实控制或调度收益证明。",
+          "source_urls": [
+            "https://arxiv.org/html/2610.10440v1"
+          ]
+        },
+        {
+          "id": "transfer",
+          "title": "怎样迁移到预测与运筹",
+          "text": "迁移建议：先用公开或合成需求，比较从噪声重启、普通热启动和自滚动更新。固定预测长度、采样数与NFE，同时记录真实耗时、CRPS及误差随更新轮数的变化。再固定一个容量配置策略，测缺容量成本与方案改动幅度。遇到突发事件时额外检查旧分布是否反而拖累更新；这些都是待验证问题，不能沿用论文百分比。",
+          "source_urls": [
+            "https://arxiv.org/html/2610.10440v1"
+          ]
+        },
+        {
+          "id": "reading_path",
+          "title": "建议阅读路线",
+          "text": "先看图1辨认“旧样本作为起点”；再读§2.3—2.5及算法1—2，分清物理时间与流积分时间；随后对照表1的NFE预算，最后读§4.3消融和附录A的任务设置。",
+          "source_urls": [
+            "https://arxiv.org/html/2610.10440v1"
+          ]
+        },
+        {
+          "id": "reproducibility",
+          "title": "复现与资源状态",
+          "text": "论文给出 Graph-COM/Seq-Flow 官方仓库链接，但本次网页及README均未成功读取，因此代码、配套数据下载和代码许可证均未核验。论文文本标注 CC BY 4.0，不应据此推定代码许可。现阶段可依据算法做独立概念验证，不能承诺完整复现。",
+          "source_urls": [
+            "https://arxiv.org/html/2610.10440v1",
+            "https://arxiv.org/abs/2610.10440"
+          ]
+        }
+      ],
+      "sources": [
+        {
+          "label": "论文全文：§2方法、§4与表1实验、§5局限、附录A",
+          "url": "https://arxiv.org/html/2610.10440v1"
+        },
+        {
+          "label": "arXiv版本记录：2026-10-07 v1",
+          "url": "https://arxiv.org/abs/2610.10440"
+        }
+      ]
+    },
+    {
+      "paper_key": "https://arxiv.org/abs/2610.06540",
+      "updated_at": "2026-10-11",
+      "coverage": "full_text",
+      "verification_note": "2026-10-11 核验 arXiv v1 全文、附录D.1/D.2及F.2/F.3；首投为2026-10-05，仍按预印本介绍，未核验录用。未从正文链接或公开检索中核验到官方代码仓库。",
+      "sections": [
+        {
+          "id": "problem",
+          "title": "问题与直觉",
+          "text": "图上当前分布相同，未来未必相同。例如一串机场当前延误水平一样，延误正在向东传播还是向西消退，会影响下一时段。这是应用类比。论文用同一当前图信号、相反近期运动的成对轨迹说明问题：只存“现在是什么样”，可能遗漏“正往哪里变”。",
+          "source_urls": [
+            "https://arxiv.org/html/2610.06540v1"
+          ]
+        },
+        {
+          "id": "method",
+          "title": "方法拆解",
+          "text": "1. 把各节点观测映射为隐状态，用首帧及相邻帧差分别初始化模式与运动。\n2. 通过图上相互作用、外部输入和阻尼更新运动状态。\n3. 用更新后的运动推进模式状态，两者在同一步耦合。\n4. 读出状态完成预测。注意天气跨天时从滚动输入重新构造双状态，并非把同一对状态直接跨天传递（附录F.3）。",
+          "source_urls": [
+            "https://arxiv.org/html/2610.06540v1"
+          ]
+        },
+        {
+          "id": "experiments",
+          "title": "实验与结果怎样读",
+          "text": "附录D.2：ERA5为1°日尺度，1979—2023训练、2024验证、2025测试。§4.3报告六个气压层、预测1—5天的位势高度RMSE，相对匹配骨干的 GraphCast* 平均降低20.2%。附录F.2表7的重训消融更有助于理解机制：去掉持续运动状态后，平均RMSE由30.72升至31.53米，增加2.63%。不能把整个架构的收益都归于这一部件。",
+          "source_urls": [
+            "https://arxiv.org/html/2610.06540v1"
+          ]
+        },
+        {
+          "id": "limitations",
+          "title": "作者范围与解读",
+          "text": "作者说明 GraphCast* 是匹配实验设置的日尺度版本，并非原版业务模型。附录D.1的四个节点分类任务训练时可见全部时刻的图与特征。我们的解读：这些分类成绩不能证明未知未来图的预测能力；天气结果也不能直接证明航空网络收益。",
+          "source_urls": [
+            "https://arxiv.org/html/2610.06540v1"
+          ]
+        },
+        {
+          "id": "transfer",
+          "title": "怎样迁移到需求与网络决策",
+          "text": "迁移建议：先做“当前值相同、变化方向相反”的合成需求或拥堵传播小实验，比较参数量匹配的GNN-LSTM、双状态模型和无运动持续传递的消融。除了多步误差，还测需求峰值到达时间、位置偏差和突变后的恢复。航空图往往有方向、班期和不规则连通性，需要检验图定义是否合适；把预测接入运力决策后，再独立评估成本。",
+          "source_urls": [
+            "https://arxiv.org/html/2610.06540v1"
+          ]
+        },
+        {
+          "id": "reading_path",
+          "title": "建议阅读路线",
+          "text": "先看图1建立方向直觉；读§3.2的“先运动、后模式”更新，再看§3.3初始化；接着读附录D.2核对比较条件，最后看F.2表7和F.3，区分重训消融与对已训练模型的干预。",
+          "source_urls": [
+            "https://arxiv.org/html/2610.06540v1"
+          ]
+        },
+        {
+          "id": "reproducibility",
+          "title": "复现与资源状态",
+          "text": "作者提供附录B的结构、D的训练协议及消融细节，但本次未核验到官方代码、权重或一键数据包。数据来源包含ERA5和既有图基准；本次未下载，也未核验各数据的使用许可。论文页面标注 arXiv 非独占分发许可，不能充当代码许可。独立实现应注明与作者实现可能存在差异。",
+          "source_urls": [
+            "https://arxiv.org/html/2610.06540v1"
+          ]
+        }
+      ],
+      "sources": [
+        {
+          "label": "论文全文：§3方法、§4结果、附录D评估、F.2表7与F.3",
+          "url": "https://arxiv.org/html/2610.06540v1"
+        },
+        {
+          "label": "arXiv版本记录：2026-10-05 v1",
+          "url": "https://arxiv.org/abs/2610.06540"
+        }
+      ]
+    },
+    {
+      "paper_key": "https://arxiv.org/abs/2610.03715",
+      "updated_at": "2026-10-11",
+      "coverage": "full_text",
+      "verification_note": "2026-10-11 核验 arXiv v1 全文、官方项目、公开仓库README和三份官方数据卡。首投2026-10-02；仓库10-05公告不是首投日期。仍按预印本介绍，未核验录用；未下载数据、克隆或运行仓库。",
+      "sections": [
+        {
+          "id": "problem",
+          "title": "问题与直觉",
+          "text": "给Agent一段布料折叠、液体流动或物体碰撞的视频，让它写程序重建随时间变化的三维场景。动机是把“看懂视频”变成可检查的几何与运动产物。直观地说，一张首帧很像的图片不足以说明它理解了布料为何弯曲，必须检查后续运动及程序表达。",
+          "source_urls": [
+            "https://arxiv.org/html/2610.03715v1",
+            "https://4dcodebench.com/"
+          ]
+        },
+        {
+          "id": "method",
+          "title": "任务流程拆解",
+          "text": "1. Agent仅得到RGB视频和固定任务说明。\n2. 自行选择几何、材质与运动表达，写可执行图形程序。\n3. 提交可从头再生成场景的程序、相机、逐帧几何和渲染视频。\n4. 分别评外观、二维运动、2.5D几何、三维几何及三维运动；真实视频部分参考量由视觉模型估计，合成场景有三维真值。",
+          "source_urls": [
+            "https://arxiv.org/html/2610.03715v1",
+            "https://github.com/4DCodeBench/4DCodeBench"
+          ]
+        },
+        {
+          "id": "experiments",
+          "title": "实验与结果怎样读",
+          "text": "200个场景，真实与合成各100个；18种模型配置，每配置每场景只跑一次。§4.2及官方项目报告：GPT-6 Astra [Max]静态指标族平均0.91，动态指标族0.67，表明运动仍难。§4.4中67%的解答用解析运动、19%用自写仿真、10%用Blender物理、3%用关键帧；这些是策略占比，不是成功率。",
+          "source_urls": [
+            "https://arxiv.org/html/2610.03715v1",
+            "https://4dcodebench.com/"
+          ]
+        },
+        {
+          "id": "limitations",
+          "title": "作者局限与解读",
+          "text": "作者§6明确：指标主要检查重建忠实度，预设轨迹也可能高分，物理机制和干预泛化仍未充分检验；当前评最终提交，也未分析迭代过程。我们的解读：单次运行不能充分体现Agent结果的随机波动。",
+          "source_urls": [
+            "https://arxiv.org/html/2610.03715v1"
+          ]
+        },
+        {
+          "id": "transfer",
+          "title": "怎样用于通用Agent验收",
+          "text": "迁移建议：对视觉或建模Agent，把最终视频、可执行程序、几何与日志一起验收。先选一个现有合成案例，检查重建能否重复生成，再改变初始位置或外力，看程序是否给出合理响应。它对航空需求并无直接实证价值；对仿真与运筹原型的启发是把“演示看着像”和“机制可干预、可复验”分成不同测试。",
+          "source_urls": [
+            "https://arxiv.org/html/2610.03715v1",
+            "https://4dcodebench.com/"
+          ]
+        },
+        {
+          "id": "reading_path",
+          "title": "建议阅读路线",
+          "text": "先在官方项目对照原视频与重建，再读§2.4理解五类指标；看§4.2、§4.4分辨得分与建模策略；最后读§6及附录G的提交格式，再决定是否投入复跑。",
+          "source_urls": [
+            "https://arxiv.org/html/2610.03715v1",
+            "https://4dcodebench.com/"
+          ]
+        },
+        {
+          "id": "reproducibility",
+          "title": "复现、数据与许可",
+          "text": "官方仓库可读，含推理、评分和查看工具；完整运行需GPU、容器和模型服务。合成世界解压约65GB，预计算估计约53GB。真实数据卡说明23段视频不能随包再分发，需从来源重建。仓库主页未见明确代码许可证；估计数据涉及多种上游许可，包括CC BY-NC 4.0。可访问不代表整套资料可自由商用；本次未实际复现。",
+          "source_urls": [
+            "https://github.com/4DCodeBench/4DCodeBench",
+            "https://huggingface.co/datasets/4DCodeBench/Dataset-Real-World",
+            "https://huggingface.co/datasets/4DCodeBench/Dataset-Model-Estimation",
+            "https://huggingface.co/datasets/4DCodeBench/Dataset-Synthetic"
+          ]
+        }
+      ],
+      "sources": [
+        {
+          "label": "论文全文：§2任务与指标、§3设置、§4结果、§6局限",
+          "url": "https://arxiv.org/html/2610.03715v1"
+        },
+        {
+          "label": "arXiv版本记录：2026-10-02 v1",
+          "url": "https://arxiv.org/abs/2610.03715"
+        },
+        {
+          "label": "官方项目：指标解释与重建展示",
+          "url": "https://4dcodebench.com/"
+        },
+        {
+          "label": "官方仓库：运行需求、数据体积和工具",
+          "url": "https://github.com/4DCodeBench/4DCodeBench"
+        },
+        {
+          "label": "官方真实数据卡：23段视频需从来源重建",
+          "url": "https://huggingface.co/datasets/4DCodeBench/Dataset-Real-World"
+        },
+        {
+          "label": "官方合成数据卡：参考世界与数据组成",
+          "url": "https://huggingface.co/datasets/4DCodeBench/Dataset-Synthetic"
+        },
+        {
+          "label": "官方估计数据卡：参考量及上游许可",
+          "url": "https://huggingface.co/datasets/4DCodeBench/Dataset-Model-Estimation"
+        }
+      ]
+    }
+  ]
+}

@@ -5,99 +5,32 @@ let currentWeek="";
 function readKey(i){return `radar:${currentWeek}:read:${i}`}
 function noteKey(i){return `radar:${currentWeek}:note:${i}`}
 
-function visualKind(p){
-  const t=(p.title+" "+p.lane).toLowerCase();
-  if(t.includes("vision")||t.includes("cvpr")||t.includes("arc ")) return "cv";
-  if(t.includes("decision-focused")||t.includes("optimization")||t.includes("constraint")||t.includes("鲁棒")||t.includes("robust")) return "or";
-  if(t.includes("uncertainty")||t.includes("probabilistic")||t.includes("quantile")||t.includes("vae")||t.includes("mixture")) return "uncertainty";
-  if(t.includes("choice")||t.includes("context-aware")||t.includes("domain knowledge")||t.includes("行为")) return "choice";
-  if(t.includes("airline")||t.includes("fleet")||t.includes("scheduling")||t.includes("航空")) return "aviation";
-  return "ai";
+function guideUrl(p,week=currentWeek){return `paper.html?week=${encodeURIComponent(week)}&paper=${encodeURIComponent(p.url)}`}
+function paragraphs(text){return String(text||"").split(/\n+/).filter(Boolean).map(t=>`<p>${esc(t)}</p>`).join("")}
+function safeUrl(url){try{const u=new URL(url);return ["https:","http:"].includes(u.protocol)?esc(u.href):"#"}catch{return "#"}}
+function sourceLink(url,label){return `<a href="${safeUrl(url)}" target="_blank" rel="noreferrer">${esc(label)} <span aria-hidden="true">↗</span></a>`}
+function noteEditor(i){return `<div class="notes-panel"><label for="note-${i}">我的问题 / 笔记</label><textarea id="note-${i}" data-note-index="${i}" rows="4" placeholder="记下疑点、复现实验或与自己研究的连接……"></textarea><div class="cloud-sync-row"><button type="button" class="cloud-sync-btn" data-cloud-index="${i}">同步到云端 ↗</button><span data-cloud-state="${i}">本地草稿</span></div><small>输入时自动保存在当前浏览器；点击同步后打开私人云端笔记。</small></div>`}
+function paperFigure(p){if(!p.figure||p.figure.mode!=="original"||!p.figure.url)return "";return `<figure class="paper-figure">${sourceLink(p.figure.url,`查看 ${p.figure.figure_no||"原论文图"}`)}<img src="${safeUrl(p.figure.url)}" alt="${esc(p.figure.caption_zh||p.title)}" loading="lazy"><figcaption>${esc(p.figure.caption_zh||"")} ${esc(p.figure.look||"")} ${sourceLink(p.figure.source_url||p.url,p.figure.source||"图片来源")}</figcaption></figure>`}
+function field(label,value){return value?`<div class="explanation-field"><h3>${label}</h3>${paragraphs(value)}</div>`:""}
+function originalExplanation(p){return field("研究问题",p.summary)+field("数据与方法",p.data_method)+field("实验结果",p.results)+field("证据与适用边界",p.evidence)+field("精读重点",p.focus)+field("研究迁移",p.future)+field("重复风险",p.overlap)+field("研究空白",p.gap)}
+function card(p,i){return `<article class="card ${esc(p.priority).toLowerCase()}" data-paper="${i}" data-priority="${esc(p.priority)}" id="paper-${i}">
+  <div class="paper-number" aria-hidden="true">${String(i+1).padStart(2,"0")}</div><div class="card-body">
+  <div class="card-top"><span class="tag priority">${esc(p.priority)}</span><span class="paper-lane">${esc(p.lane)}</span><span class="read-state" data-read-state="${i}">未读</span></div>
+  <h3><a href="${guideUrl(p)}">${esc(p.title)}</a></h3>
+  <p class="authors">${esc(p.authors)}</p><p class="paper-meta">${esc(p.venue)} <span>·</span> ${esc(p.year)}</p>
+  <div class="paper-brief"><div class="block"><b>这篇讲什么</b><p>${esc(p.summary)}</p></div><div class="block key"><b>为什么推荐</b><p>${esc(p.why)}</p></div></div>
+  <div class="guide-outline" aria-label="讲解栏目"><span>研究问题</span><span>方法与实验</span><span>局限与迁移</span></div><div class="card-actions"><a class="guide-link" href="${guideUrl(p)}">阅读论文讲解 <span aria-hidden="true">→</span></a><a class="paper-link" href="${safeUrl(p.url)}" target="_blank" rel="noreferrer">原文 / DOI ↗</a><button class="read-toggle" type="button" data-read-index="${i}" aria-pressed="false">○ 标记已读</button></div>
+  <details class="note-details"><summary>我的笔记 <span>本地草稿 · 可同步</span></summary>${noteEditor(i)}</details>
+  </div></article>`}
+function issueArt(c){return `<svg class="issue-art" viewBox="0 0 320 200" aria-hidden="true"><path d="M28 163H300M37 39V177" stroke="#e2e7ef" fill="none"/><g transform="rotate(9 170 108)"><rect x="96" y="27" width="149" height="156" rx="3" fill="#f1f4f9" stroke="#dce2ec"/></g><g transform="rotate(-7 166 109)"><rect x="75" y="22" width="154" height="159" rx="3" fill="white" stroke="#d6dde9"/><path d="M194 22v39l9-7 9 7V22" fill="#3b5ea8"/><text x="94" y="49" fill="#7b8595" font-size="7" letter-spacing="1.5">RESEARCH BRIEF</text><text x="94" y="97" fill="#293342" font-size="28" font-family="serif">${String(c.papers.length).padStart(2,"0")}</text><text x="137" y="94" fill="#7b8595" font-size="9">PAPERS</text><path d="M94 116h113M94 127h97M94 138h108M94 152h60" stroke="#d7dfeb"/></g><path d="M44 150C2 114 256 53 283 85S232 164 90 173" stroke="#8096c2" stroke-width="1" fill="none"/><circle cx="56" cy="152" r="3.5" fill="#3b5ea8"/><path d="M276 43v10m-5-5h10" stroke="#a7b6ce"/></svg>`}
+function headerNav(){return `<a class="brand" href="./"><span class="brand-mark">研</span><span>每周研究雷达<small>WEEKLY RESEARCH RADAR</small></span></a><nav aria-label="主要功能"><a href="./#papers">本周推荐</a><a href="./?view=guides#papers">论文讲解</a><a href="./#archive">周报归档</a><a class="nav-notes" href="workspace.html">我的笔记 <span aria-hidden="true">↗</span></a></nav>`}
+function issueContext(c){return `<details class="issue-context"><summary><span>本期综述与阅读路线</span><span class="context-hint">${(c.signals||[]).length} 条判断 · ${c.papers.length} 篇论文 <b aria-hidden="true">＋</b></span></summary><div class="context-content"><div class="context-summary"><h2>本期综述</h2><p>${esc(c.weekly_summary||c.purpose)}</p>${c.freshness_note?`<p class="freshness">${esc(c.freshness_note)}</p>`:""}<div class="scope-row">${(c.scope||[]).map(x=>`<span>${esc(x)}</span>`).join("")}</div></div><div class="reading-order"><h2>建议阅读顺序</h2><ol>${(c.reading_order||[]).map(x=>`<li>${esc(x)}</li>`).join("")}</ol></div><div class="signals"><h2>本周判断</h2>${(c.signals||[]).map(x=>`<article><h3>${esc(x.title)}</h3><p>${esc(x.text)}</p></article>`).join("")}</div></div></details>`}
+function restoreAnchor(){try{if(location.hash)document.getElementById?.(decodeURIComponent(location.hash.slice(1)))?.scrollIntoView?.({block:"start"})}catch{}}
+function configureLibrary(c){
+ const search=document.querySelector("#paper-search"),unread=document.querySelector("#unread-only"),chips=[...document.querySelectorAll("[data-filter]")],cards=[...document.querySelectorAll("[data-paper]")];let category="all";
+ function apply(){let visible=0;const q=search.value.trim().toLocaleLowerCase();cards.forEach(el=>{const i=Number(el.dataset.paper),p=c.papers[i];const text=[p.title,p.authors,p.lane,p.venue,p.summary,p.why,p.data_method].filter(Boolean).join(" ").toLocaleLowerCase();el.hidden=!((category==="all"||p.priority===category)&&(!q||text.includes(q))&&(!unread.checked||localStorage.getItem(readKey(i))!=="1"));if(!el.hidden)visible++});document.querySelectorAll(".paper-section").forEach(section=>{section.hidden=![...section.querySelectorAll(".card")].some(card=>!card.hidden)});document.querySelector("#result-count").textContent=`${visible} / ${c.papers.length} 篇`;document.querySelector("#no-results").hidden=visible!==0;}
+ search.addEventListener("input",apply);unread.addEventListener("change",apply);chips.forEach(btn=>btn.addEventListener("click",()=>{category=btn.dataset.filter;chips.forEach(x=>x.setAttribute("aria-pressed",String(x===btn)));apply()}));document.addEventListener("radar:progress",apply);document.querySelector("#clear-search").addEventListener("click",()=>{search.value="";unread.checked=false;category="all";chips.forEach(x=>x.setAttribute("aria-pressed",String(x.dataset.filter==="all")));apply();search.focus()});apply();
 }
-
-function paperVisual(p,i){
-  const kind=visualKind(p);
-  const labels={aviation:"AVIATION NETWORK",or:"AI × OR",uncertainty:"UNCERTAINTY",choice:"BEHAVIOR × AI",cv:"COMPUTER VISION",ai:"AI / ML"};
-  const svg={
-    aviation:`<svg viewBox="0 0 640 240" aria-hidden="true"><path d="M40 172 C138 74 232 206 322 116 S480 62 596 146" class="v-line"/><path d="M52 72 C170 164 254 44 368 142 S510 212 604 82" class="v-line faint"/><g class="v-nodes"><circle cx="72" cy="158" r="7"/><circle cx="182" cy="108" r="5"/><circle cx="312" cy="120" r="9"/><circle cx="446" cy="92" r="6"/><circle cx="568" cy="144" r="8"/></g><path d="M72 158 L312 120 L568 144 M182 108 L446 92 M312 120 L446 92" class="v-link"/></svg>`,
-    or:`<svg viewBox="0 0 640 240" aria-hidden="true"><path d="M52 190 H596 M92 210 V42" class="v-axis"/><path d="M112 174 L208 128 L304 146 L414 78 L552 96" class="v-line"/><polygon points="330,176 418,152 486,98 396,70 316,112" class="v-poly"/><path d="M184 74 C248 52 274 70 314 108" class="v-arrow"/></svg>`,
-    uncertainty:`<svg viewBox="0 0 640 240" aria-hidden="true"><path d="M42 194 H604" class="v-axis"/><path d="M62 184 C136 182 148 76 224 76 C302 76 320 182 390 184" class="v-line"/><path d="M210 184 C270 180 290 108 350 108 C414 108 438 180 502 184" class="v-line faint"/><g class="v-bars"><rect x="82" y="150" width="18" height="34"/><rect x="116" y="118" width="18" height="66"/><rect x="150" y="88" width="18" height="96"/><rect x="184" y="126" width="18" height="58"/></g><path d="M534 62 V184 M510 82 H558 M510 168 H558" class="v-range"/></svg>`,
-    choice:`<svg viewBox="0 0 640 240" aria-hidden="true"><g class="v-nodes"><circle cx="86" cy="72" r="8"/><circle cx="86" cy="120" r="8"/><circle cx="86" cy="168" r="8"/><circle cx="258" cy="96" r="8"/><circle cx="258" cy="144" r="8"/><circle cx="428" cy="120" r="9"/><circle cx="560" cy="120" r="11"/></g><path d="M94 72 L250 96 M94 72 L250 144 M94 120 L250 96 M94 120 L250 144 M94 168 L250 96 M94 168 L250 144 M266 96 L420 120 M266 144 L420 120 M437 120 L549 120" class="v-link"/><path d="M80 202 C168 186 222 168 298 150 C392 128 476 84 562 56" class="v-line"/></svg>`,
-    cv:`<svg viewBox="0 0 640 240" aria-hidden="true"><g class="v-grid">${Array.from({length:18},(_,k)=>{const x=48+(k%6)*42,y=42+Math.floor(k/6)*42;return `<rect x="${x}" y="${y}" width="28" height="28" rx="4"/>`}).join("")}</g><path d="M334 62 H424 M334 108 H424 M334 154 H424" class="v-link"/><rect x="448" y="54" width="140" height="116" rx="18" class="v-box"/><path d="M472 82 H566 M472 108 H566 M472 134 H540" class="v-line short"/></svg>`,
-    ai:`<svg viewBox="0 0 640 240" aria-hidden="true"><path d="M64 162 C144 54 236 56 302 128 S466 200 574 86" class="v-line"/><g class="v-nodes"><circle cx="88" cy="148" r="7"/><circle cx="202" cy="78" r="7"/><circle cx="314" cy="134" r="7"/><circle cx="444" cy="154" r="7"/><circle cx="556" cy="92" r="7"/></g></svg>`
-  }[kind];
-  return `<div class="paper-visual ${kind}"><div class="visual-label"><span>${labels[kind]}</span><b>${String(i+1).padStart(2,"0")}</b></div>${svg}</div>`;
-}
-
-
-function paperFigure(p,i){
-  if(!p.figure || p.figure.mode!=="original" || !p.figure.url) return paperVisual(p,i);
-  return `<figure class="paper-figure original">
-    <div class="figure-ribbon"><span>原论文图 · ${esc(p.figure.figure_no||"Figure")}</span><b>${esc(p.figure.license||"Open access")}</b></div>
-    <a href="${esc(p.figure.url)}" target="_blank" rel="noreferrer" class="figure-image-link">
-      <img src="${esc(p.figure.url)}" alt="${esc(p.figure.caption_zh||p.title)}" loading="lazy" decoding="async" fetchpriority="low" referrerpolicy="no-referrer">
-    </a>
-    <figcaption>
-      <p>${esc(p.figure.caption_zh||"")}</p>
-      <div class="figure-look"><b>你看哪里</b><span>${esc(p.figure.look||"")}</span></div>
-      <a href="${esc(p.figure.source_url||p.url)}" target="_blank" rel="noreferrer">来源：${esc(p.figure.source||p.venue)} · ${esc(p.figure.figure_no||"Figure")} ↗</a>
-    </figcaption>
-  </figure>`;
-}
-
-function orb(total){
-  return `<div class="orb-wrap" aria-hidden="true">
-    <div class="orb-halo"></div>
-    <svg class="orb" viewBox="0 0 640 640" role="presentation">
-      <circle class="orb-ring ring-a" cx="320" cy="320" r="242"></circle>
-      <circle class="orb-ring ring-b" cx="320" cy="320" r="178"></circle>
-      <circle class="orb-ring ring-c" cx="320" cy="320" r="110"></circle>
-      <path class="orb-path path-a" d="M88 360 C170 130 440 95 554 302 C622 426 492 570 312 536 C159 508 62 437 88 360Z"></path>
-      <path class="orb-path path-b" d="M150 160 C305 230 420 150 520 306 C590 415 450 472 330 420 C198 363 112 280 150 160Z"></path>
-      <g class="nodes"><circle cx="155" cy="225" r="6"></circle><circle cx="484" cy="186" r="5"></circle><circle cx="525" cy="400" r="7"></circle><circle cx="246" cy="494" r="5"></circle><circle cx="310" cy="270" r="8"></circle><circle cx="391" cy="348" r="5"></circle><circle cx="212" cy="333" r="4"></circle><circle cx="423" cy="468" r="4"></circle></g>
-      <g class="orb-labels"><text x="98" y="205">CHOICE</text><text x="438" y="166">DEMAND</text><text x="482" y="434">ROBUST</text><text x="194" y="525">AI × OR</text></g>
-    </svg>
-    <div class="orb-core"><span>THIS WEEK</span><b id="orb-read">0</b><small>read</small></div>
-  </div>`
-}
-
-function card(p,i){
-  return `<article class="card ${esc(p.priority).toLowerCase()}" data-paper="${i}">
-    ${paperFigure(p,i)}
-    <div class="card-body">
-      <div class="card-top">
-        <span class="tag priority ${esc(p.priority).toLowerCase()}">${esc(p.priority)}</span>
-        <span class="tag">${esc(p.lane)}</span>
-      </div>
-      <h3>${esc(p.title)}</h3>
-      <p class="authors">${esc(p.authors)}</p>
-      <div class="meta-tags"><span>${esc(p.venue)}</span><span>${esc(p.year)}</span><span>${esc(p.level)}</span></div>
-      <div class="paper-actions">
-        <button class="read-toggle" type="button" data-read-index="${i}">○ 标记已读</button>
-        <span class="read-state" data-read-state="${i}">未读</span>
-      </div>
-      <div class="block compact-block"><b>这篇讲什么</b><p>${esc(p.summary)}</p></div>
-      <div class="block key compact-block"><b>为什么推荐给你</b><p>${esc(p.why)}</p></div>
-      <details class="paper-more">
-        <summary>展开完整解读</summary>
-        <div class="block"><b>精读重点</b><p>${esc(p.focus)}</p></div>
-        <div class="block"><b>和未来规划怎么接</b><p>${esc(p.future)}</p></div>
-        ${p.overlap||p.gap?`<div class="block"><b>重复风险 / 研究空白</b><p>${esc(p.overlap)} ${esc(p.gap)}</p></div>`:""}
-        <div class="notes-panel">
-          <b>我的问题 / 笔记</b>
-          <textarea data-note-index="${i}" rows="4" placeholder="记下疑点、复现实验或与自己研究的连接……"></textarea>
-          <div class="cloud-sync-row">
-            <button type="button" class="cloud-sync-btn" data-cloud-index="${i}">同步到云端</button>
-            <span data-cloud-state="${i}">本地草稿</span>
-          </div>
-          <small>本地输入会先保存在当前浏览器；点击“同步到云端”后写入 Supabase 私有数据库。</small>
-        </div>
-      </details>
-      <a class="paper-link" href="${esc(p.url)}" target="_blank" rel="noreferrer">打开原文 / DOI <span>↗</span></a>
-    </div>
-  </article>`
-}
-
 function setupProgress(papers){
   const total=papers.length;
   const buttons=[...document.querySelectorAll("[data-read-index]")];
@@ -114,6 +47,7 @@ function setupProgress(papers){
       if(read) done++;
       btn.textContent=read?"✓ 已读":"○ 标记已读";
       btn.classList.toggle("done",read);
+      btn.setAttribute("aria-pressed",String(read));
       const state=states.find(x=>x.dataset.readState===i);
       if(state) state.textContent=read?"已完成":"未读";
       const card=btn.closest(".card");
@@ -135,6 +69,7 @@ function setupProgress(papers){
     const read=localStorage.getItem(readKey(i))==="1";
     localStorage.setItem(readKey(i),read?"0":"1");
     refresh();
+    document.dispatchEvent(new Event("radar:progress"));
   }));
 
   notes.forEach(area=>{
@@ -167,82 +102,41 @@ function setupProgress(papers){
 }
 
 async function load(){
-  const c=await fetch("data/current.json?v=20261009-v1",{cache:"default"}).then(r=>{
-    if(!r.ok)throw new Error("current_failed");
-    return r.json();
-  });
-
-  currentWeek=c.week;
-  const p0=c.papers.filter(p=>p.priority==="P0");
-  const p1=c.papers.filter(p=>p.priority==="P1");
-  const p2=c.papers.filter(p=>p.priority==="P2");
-  const signals=(c.signals||[]).map((x,i)=>`<article><span>${String(i+1).padStart(2,"0")}</span><div><b>${esc(x.title)}</b><p>${esc(x.text)}</p></div></article>`).join("");
-  const scope=(c.scope||[]).map(x=>`<b>${esc(x)}</b>`).join("");
-  const order=(c.reading_order||[]).map((x,i)=>`<li><span>${String(i+1).padStart(2,"0")}</span><p>${esc(x)}</p></li>`).join("");
-
-  document.querySelector("#app").innerHTML=`
-    <section class="weekly-overview" id="home">
-      <div class="overview-copy">
-        <p class="eyebrow">${esc(c.week)} · ${esc(c.label)}</p>
-        <h1>本周文献总结</h1>
-        <p class="weekly-summary">${esc(c.weekly_summary||c.purpose)}</p>
-        <div class="scope-row"><span>本周覆盖</span>${scope}</div>
-        <div class="progress-card">
-          <div class="progress-top"><div><span>阅读进度</span><strong id="progress-count">0 / ${c.papers.length}</strong></div><em id="progress-percent">0%</em></div>
-          <div class="progress-track"><i id="progress-bar"></i></div>
-          <small>本地勾选和笔记可继续使用；登录后可同步到 Supabase 云端并跨设备查看。</small>
-        </div>
-      </div>
-      <div class="overview-visual">
-        ${orb(c.papers.length)}
-        <div class="reading-order"><span>这周怎么读</span><ol>${order}</ol></div>
-      </div>
-      <div class="signals-title"><span>WEEKLY SIGNALS</span><h2>这周我给你的 5 条判断</h2></div>
-      <div class="signals-grid count-${(c.signals||[]).length}">${signals}</div>
-    </section>
-
-    <section class="focus-strip"><span>筛选方向</span><b>航空 / 交通</b><b>Operations Research</b><b>AI / ML</b><b>Computer Vision</b><b>AI + OR</b></section>
-
-    <section class="section" id="must">
-      <div class="section-head"><div><p class="eyebrow">START HERE</p><h2>本周先读这 ${p0.length} 篇</h2></div><p>这里只放真正会影响你的研究边界或未来方法线的论文。</p></div>
-      <div class="paper-grid featured count-${p0.length}">${p0.map((p,i)=>card(p,i)).join("")}</div>
-    </section>
-
-    <section class="section reserve" id="reserve">
-      <div class="section-head"><div><p class="eyebrow">P1 · METHOD TRANSFER</p><h2>方法迁移</h2></div><p>这些论文不一定直接做旅客需求，但方法能迁移到你的航空 AI+OR、概率预测和生成建模。</p></div>
-      <div class="paper-grid count-${p1.length}">${p1.map((p,i)=>card(p,i+p0.length)).join("")}</div>
-    </section>
-
-    <section class="section horizon" id="horizon">
-      <div class="section-head"><div><p class="eyebrow">P2 · HORIZON</p><h2>视野拓展</h2></div><p>只保留真正能补 AI / CV / 推理能力的内容，不和主线论文混在一起。</p></div>
-      <div class="paper-grid count-${p2.length}">${p2.map((p,i)=>card(p,i+p0.length+p1.length)).join("")}</div>
-    </section>
-
-    <section class="section" id="actions">
-      <div class="section-head"><div><p class="eyebrow">FROM READING TO OUTPUT</p><h2>把阅读变成成果</h2></div><p>阅读本身不算完成。每个动作都必须留下一个可复用、可展示、可继续迭代的产物。</p></div>
-      <div class="actions">${c.actions.map((x,i)=>`<article class="action"><div class="action-no">${String(i+1).padStart(2,"0")}</div><div><div class="action-time">${esc(x.time)}</div><h3>${esc(x.title)}</h3><p>${esc(x.deliverable)}</p></div></article>`).join("")}</div>
-    </section>
-
-    <section class="archive-panel" id="archive">
-      <div><p class="eyebrow">ARCHIVE</p><h2>历史周报</h2><p>历史归档延后加载，不影响本周论文首屏。</p></div>
-      <div class="archive" id="archive-list"><span class="archive-loading">正在载入历史周报…</span></div>
-    </section>`;
-
-  setupProgress(c.papers);
-
-  // Do not block current-week content on archive data.
-  fetch("data/archive.json?v=20261009-v1",{cache:"default"})
-    .then(r=>r.ok?r.json():[])
-    .then(a=>{
-      const box=document.querySelector("#archive-list");
-      if(!box)return;
-      box.innerHTML=a.length
-        ? a.map(x=>`<a href="${esc(x.file)}"><span>${esc(x.week)}</span><b>${esc(x.label)}</b><em>${esc(x.total)} papers</em></a>`).join("")
-        : '<span class="archive-loading">暂无历史周报</span>';
-    })
-    .catch(()=>{
-      const box=document.querySelector("#archive-list");
-      if(box)box.innerHTML='<span class="archive-loading">历史周报加载失败，可稍后刷新。</span>';
-    });
+ const requestedWeek=new URLSearchParams(location.search).get("week");
+ if(requestedWeek&&!/^\d{4}-\d{2}-\d{2}$/.test(requestedWeek))throw new Error("invalid_week");
+ const c=await fetch(requestedWeek?`weekly/${requestedWeek}.json`:"data/current.json?v=20261009-v1",{cache:"default"}).then(r=>{if(!r.ok)throw new Error("current_failed");return r.json()});
+ currentWeek=c.week;
+ const isGuides=new URLSearchParams(location.search).get("view")==="guides";
+ document.querySelector(".topbar").innerHTML=headerNav();
+ const groups=[["P0","本周必读","直接连接研究主线"],["P1","方法迁移","把其他领域的方法带回你的问题"],["P2","视野拓展","值得保留的新方向与技术能力"]];
+ document.querySelector("#app").innerHTML=`
+ <section class="issue-header ${isGuides?"catalog-intro":""}" id="home"><div class="issue-copy"><p class="eyebrow">${esc(c.week)} <span>／</span> ${esc(c.label.split(" · ")[0])}</p><h1>${esc(c.label.includes(" · ")?c.label.split(" · ").slice(1).join(" · "):c.label)}</h1><p class="issue-purpose">${esc(c.purpose)}</p><div class="issue-links"><a class="primary-link" href="weekly/view.html?week=${encodeURIComponent(c.week)}">阅读完整周报 <span>↗</span></a><a href="#papers">浏览 ${c.papers.length} 篇论文 <span>↓</span></a></div></div>${issueArt(c)}</section>
+ <div class="issue-meta"><span>本期 <b>${c.papers.length}</b> 篇推荐</span><div class="progress-card"><span>阅读进度</span><strong id="progress-count">0 / ${c.papers.length}</strong><div class="progress-track"><i id="progress-bar"></i></div><span id="progress-percent">0%</span></div><a href="workspace.html">笔记与已读状态同步 ↗</a></div>
+ ${isGuides?"":issueContext(c)}
+ <section class="library-head" id="papers"><div><p class="eyebrow">${isGuides?"PAPER GUIDES":"THIS WEEK’S READING"}</p><h2>${isGuides?"论文讲解":"本期推荐"}</h2><p>${isGuides?"从研究问题到方法、实验与边界，逐篇读懂。":"先选值得读的，再把阅读变成自己的思考。"}</p></div><a class="text-link" href="${isGuides?`?week=${encodeURIComponent(c.week)}#papers`:`?week=${encodeURIComponent(c.week)}&view=guides#papers`}">${isGuides?"返回推荐视图":"按篇阅读讲解"} →</a></section>
+ <div class="library-tools"><label class="search-box"><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="10.5" cy="10.5" r="6.5"/><path d="m16 16 4.5 4.5"/></svg><input type="search" id="paper-search" placeholder="搜索本期标题、方法、作者…" aria-label="搜索本期论文"></label><div class="filter-chips" aria-label="论文分类"><button type="button" data-filter="all" aria-pressed="true">全部</button>${groups.map(([key,title])=>`<button type="button" data-filter="${key}" aria-pressed="false">${key} ${title}</button>`).join("")}</div><label class="unread-filter"><input type="checkbox" id="unread-only"> 只看未读</label><span id="result-count" aria-live="polite"></span></div>
+ <div class="paper-library ${isGuides?"guide-catalog":""}">${groups.map(([key,title,description])=>{const papers=c.papers.map((p,i)=>({p,i})).filter(({p})=>p.priority===key);return papers.length?`<section class="paper-section" id="${key==="P0"?"must":key==="P1"?"reserve":"horizon"}"><div class="section-head"><h2><span>${key}</span>${title}<small>${papers.length} 篇</small></h2><p>${description}</p></div><div class="paper-grid">${papers.map(({p,i})=>card(p,i)).join("")}</div></section>`:""}).join("")}<div id="no-results" class="empty-state" hidden><h3>没有找到匹配的论文</h3><p>试试更短的关键词，或取消分类和已读筛选。</p><button id="clear-search" type="button">重置筛选</button></div></div>
+ <section class="actions-section" id="actions"><div class="section-head"><h2>本周行动<small>从阅读到产出</small></h2></div><div class="actions">${(c.actions||[]).map((x,i)=>`<article><span>${String(i+1).padStart(2,"0")}</span><div><p class="action-time">${esc(x.time)}</p><h3>${esc(x.title)}</h3><p>${esc(x.deliverable)}</p></div></article>`).join("")}</div></section>
+ <section class="archive-panel" id="archive"><div class="section-head"><h2>周报归档</h2><p>按期回看完整综述与阅读路线</p></div><div id="archive-list" class="archive"><p class="loading">正在载入历史周报…</p></div></section>
+ <footer class="site-footer"><span>每周研究雷达</span><span>文献 · 方法 · 思考</span><a href="workspace.html">我的私人笔记 ↗</a></footer>`;
+ setupProgress(c.papers);configureLibrary(c);restoreAnchor();
+ fetch("data/archive.json?v=20261009-v1",{cache:"default"}).then(r=>{if(!r.ok)throw new Error();return r.json()}).then(a=>{document.querySelector("#archive-list").innerHTML=a.length?a.map(x=>`<div class="archive-row"><a class="archive-main" href="${safeUrl(new URL(x.file,location.href).href)}"><span class="archive-date">${esc(x.week)}</span><b>${esc(x.label)}</b><span>${esc(x.total)} 篇</span><em aria-hidden="true">↗</em></a><a class="archive-catalog" href="?week=${encodeURIComponent(x.week)}&view=guides#papers">查看论文 →</a></div>`).join(""):'<p class="loading">暂无历史周报</p>'}).catch(()=>{document.querySelector("#archive-list").innerHTML='<p class="loading">历史周报加载失败，请稍后刷新。</p>'});
 }
-load().catch(()=>{document.querySelector("#app").innerHTML="<p class='loading'>读取数据失败，请直接进入 weekly/ 查看周报。</p>"})
+async function loadPaper(){
+ document.querySelector(".topbar").innerHTML=headerNav();
+ const params=new URLSearchParams(location.search),week=params.get("week"),key=params.get("paper");if(!/^\d{4}-\d{2}-\d{2}$/.test(week||"")||!key)throw new Error("invalid_paper");
+ const c=await fetch(`weekly/${week}.json`,{cache:"no-store"}).then(r=>{if(!r.ok)throw new Error("missing_week");return r.json()});currentWeek=c.week;
+ const i=c.papers.findIndex(p=>p.url===key),p=c.papers[i];if(!p)throw new Error("missing_paper");
+ let guide=null;try{const g=await fetch("data/paper-guides.json",{cache:"no-store"}).then(r=>r.ok?r.json():null);guide=g?.guides?.find(x=>(x.paper_key||x.paper_url)===p.url)}catch{}
+ const sections=(guide?.sections||[]).filter(s=>s.text&&s.title);const sources=[...new Set([p.url,...(p.source_urls||[])])];
+ document.title=p.title+" · 论文讲解";
+ document.querySelector("#app").innerHTML=`<div class="paper-breadcrumb"><a href="./?week=${encodeURIComponent(c.week)}&view=guides#paper-${i}">← 返回论文列表</a><a href="weekly/view.html?week=${encodeURIComponent(c.week)}">${esc(c.week)} 周报 ↗</a></div>
+ <article class="guide-page card" data-paper="${i}"><header class="guide-header"><div class="card-top"><span class="tag priority">${esc(p.priority)}</span><span class="paper-lane">${esc(p.lane)}</span><span class="read-state" data-read-state="${i}">未读</span></div><h1>${esc(p.title)}</h1><p class="authors">${esc(p.authors)}</p><p class="paper-meta">${esc(p.venue)} · ${esc(p.year)}</p><p class="publication-note">${esc(p.published_at||p.level)}</p><div class="card-actions"><a class="primary-link" href="${safeUrl(p.url)}" target="_blank" rel="noreferrer">阅读原论文 ↗</a><a href="#paper-notes">写笔记 ↓</a><button class="read-toggle" type="button" data-read-index="${i}" aria-pressed="false">○ 标记已读</button></div></header>
+ <div class="guide-layout"><aside class="guide-toc"><p class="eyebrow">本篇导读</p><nav aria-label="论文讲解目录">${sections.map((s,j)=>`<a href="#guide-section-${j}">${esc(s.title)}</a>`).join("")}<a href="#original-explanation">原周报记录</a><a href="#paper-sources">原文与来源</a><a href="#paper-notes">我的笔记</a></nav></aside><div class="guide-content">
+ ${sections.length?`<div class="guide-verification"><b>新增讲解</b><span>核验 / 补充于 ${esc(guide.updated_at||guide.checked_at||"")}</span><p class="coverage-label">${guide.coverage==="abstract_only"?"核验范围：摘要与公开元数据；未完成全文复核。":guide.coverage==="full_text"?"核验范围：原论文全文与列出的公开来源。":"核验范围以以下说明为准。"}</p>${guide.verification_note?`<p>${esc(guide.verification_note)}</p>`:""}</div>${sections.map((s,j)=>`<section class="guide-section" id="guide-section-${j}"><h2><span>${String(j+1).padStart(2,"0")}</span>${esc(s.title)}</h2>${paragraphs(s.text)}${s.source_urls?.length?`<div class="section-sources"><span>本节依据</span>${s.source_urls.map((url,k)=>sourceLink(url,`来源 ${k+1}`)).join("")}</div>`:""}</section>`).join("")}`:""}
+ <section class="original-explanation" id="original-explanation"><div class="section-heading"><h2>原周报记录</h2><span>${esc(c.week)} 发布内容</span></div><p class="explanation-origin">以下保留本期推荐中的原有解读与核验说明。</p>${originalExplanation(p)}${paperFigure(p)}</section>
+ <section class="guide-section" id="paper-sources"><h2>原文与来源</h2><ul class="source-list">${sources.map((url,j)=>`<li>${sourceLink(url,j===0?"原论文 / DOI":`本期引用来源 ${j}`)}</li>`).join("")}${(guide?.sources||[]).filter(s=>s.url&&s.label).map(s=>`<li>${sourceLink(s.url,s.label)}</li>`).join("")}</ul>${p.code_url?`<div class="code-source">${sourceLink(p.code_url,"论文提供的代码链接")}<p>代码可用性与复现状态以本期证据说明及补充讲解为准。</p></div>`:""}</section>
+ <section class="guide-section" id="paper-notes"><h2>我的笔记</h2>${noteEditor(i)}</section></div></div></article><footer class="site-footer"><a href="./?week=${encodeURIComponent(c.week)}&view=guides#paper-${i}">← 返回论文列表</a><a href="workspace.html?week=${encodeURIComponent(c.week)}">本期私人云端笔记 ↗</a></footer>`;
+ setupProgress(c.papers);restoreAnchor();
+}
+(document.body.dataset.view==="paper"?loadPaper():load()).catch(()=>{document.querySelector("#app").innerHTML='<div class="empty-state"><h1>内容暂时无法载入</h1><p>请检查链接中的周报日期，或稍后刷新重试。</p><a href="./#archive">返回周报归档 →</a></div>'});
