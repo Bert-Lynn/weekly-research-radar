@@ -1,0 +1,98 @@
+{
+  "version": 1,
+  "checked_at": "2026-10-11",
+  "scope_note": "本期优先核验 2026-09-27 至 2026-10-11 的公开原始来源，精选 4 条工具、数据、基准与研究进展。条目日期为所注明的原始事件日期，核验日期为 2026-10-11；这是人工核验快照，不是实时信息流，也不代表已复现实验。应用建议是编辑判断。",
+  "items": [
+    {
+      "id": "clef-omni-20261009",
+      "title": "Clef-omni 发布：多模态输入直接得到结构化决策",
+      "date": "2026-10-09",
+      "date_label": "官方模型发布",
+      "kind": "toolrelease",
+      "summary": "Cloudflare 发布 Clef-omni，支持文字、图像、音频和视频，并对预设选项返回概率。官方已提供模型权重、托管 API 和调用示例。",
+      "why_it_matters": "可探索将多模态事件识别接入 Agent 分流环节，并单独评估概率是否可靠。",
+      "action": "用公开样例做小型分类演示，同时记录错误率、校准误差和延迟。",
+      "limitations": "官方榜单并非独立复现；输出概率不保证在交通场景中已校准。模型卡的 bfloat16 示例约需 64 GB 显存，托管调用另有费用。",
+      "sources": [
+        {
+          "label": "官方发布公告 · 10-09",
+          "url": "https://blog.cloudflare.com/clef-faster-cheaper-multimodal/"
+        },
+        {
+          "label": "官方模型卡与权重",
+          "url": "https://huggingface.co/Cloudflare/clef-omni"
+        },
+        {
+          "label": "API 示例与限制",
+          "url": "https://developers.cloudflare.com/workers-ai/models/clef-omni/"
+        }
+      ]
+    },
+    {
+      "id": "4dcodebench-estimates-20261008",
+      "title": "4DCodeBench 新增预计算评分参考数据",
+      "date": "2026-10-08",
+      "date_label": "官方仓库公告的数据发布",
+      "kind": "dataset",
+      "summary": "4DCodeBench 发布 Dataset-Model-Estimation，提供参考视频的深度、光流、轨迹及特征估计。使用这批数据可跳过评分前的参考估计计算。",
+      "why_it_matters": "让“视频到可执行动态场景”演示更容易采用统一评测，而不只比较视觉效果。",
+      "action": "先选一个合成场景，检查重建、动态误差和评分流程。",
+      "limitations": "数据约 53 GB，评分仍需 GPU。部分上游模型采用非商用许可；23 段真实视频需按来源重建，不能视为整套素材均可自由商用。",
+      "sources": [
+        {
+          "label": "官方仓库发布记录 · 10-08",
+          "url": "https://github.com/4DCodeBench/4DCodeBench#news"
+        },
+        {
+          "label": "数据卡、使用方法与许可",
+          "url": "https://huggingface.co/datasets/4DCodeBench/Dataset-Model-Estimation"
+        }
+      ],
+      "related_paper_url": "https://arxiv.org/abs/2610.03715"
+    },
+    {
+      "id": "evocast-preprint-20261003",
+      "title": "EvoCast：预测研究 Agent 加入独立实验裁决",
+      "date": "2026-10-03",
+      "date_label": "arXiv v1 提交",
+      "kind": "preprint",
+      "summary": "EvoCast 预印本提出预测架构迭代系统：LLM 提出假设并改代码，确定性程序负责编辑边界、统一评估和候选晋升。公开仓库含快速检查模式与 HTML 实验报告。",
+      "why_it_matters": "对预测 Agent 而言，固定实验协议和完整失败记录值得借鉴。",
+      "action": "先用公开时序 CSV 跑快速检查，确认数据划分和裁决流程，再扩大实验。",
+      "limitations": "仍是预印本，报告覆盖三个预测案例；不能据此推断概率校准或跨领域普遍提升。运行需要 GPU，LLM 研究流程还需 API。",
+      "sources": [
+        {
+          "label": "预印本与原始提交日期",
+          "url": "https://arxiv.org/abs/2610.04517"
+        },
+        {
+          "label": "官方代码与快速检查说明",
+          "url": "https://github.com/18e0-x/EvoCast"
+        }
+      ],
+      "related_paper_url": "https://arxiv.org/abs/2610.04517"
+    },
+    {
+      "id": "lace-artifacts-20261001",
+      "title": "LACE：组合优化研究附带完整复现包",
+      "date": "2026-10-01",
+      "date_label": "论文正式发表；并非代码首发日",
+      "kind": "benchmark",
+      "summary": "LACE 研究发表于 Nature Machine Intelligence。配套仓库公开 36 个经典优化问题和 4 个港口物流问题的实例、启发式组合及评估脚本，覆盖调度、路径与选址。",
+      "why_it_matters": "提供把 LLM 算法设计接到可行性检验、运行预算和逐实例比较上的具体材料。",
+      "action": "先评估仓库自带的飞机降落或路径问题启发式组合；这一步无需 LLM API。",
+      "limitations": "10 月 1 日是论文发表日，未核定仓库首发日。重新演化算法需要 API；论文优势不能外推到所有交通优化任务。",
+      "sources": [
+        {
+          "label": "期刊原文与数据声明 · 10-01",
+          "url": "https://www.nature.com/articles/s42256-026-01307-8"
+        },
+        {
+          "label": "官方复现代码与问题实例",
+          "url": "https://github.com/PJ-NTU/LACE"
+        }
+      ],
+      "related_paper_url": "https://www.nature.com/articles/s42256-026-01307-8"
+    }
+  ]
+}

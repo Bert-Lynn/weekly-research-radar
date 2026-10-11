@@ -34,6 +34,8 @@ function buildToc(){
 async function load(){
   if(!valid)throw new Error("invalid_week");
   dateEl.textContent=week;
+  const paperLibrary=document.querySelector("#paper-library-link");
+  if(paperLibrary)paperLibrary.href=`../papers.html?week=${encodeURIComponent(week)}`;
   if(cloudLink) cloudLink.href=`../workspace.html?week=${encodeURIComponent(week)}`;
   const res=await fetch(`./${week}.md?v=20260927-v3`,{cache:"no-store"});
   if(!res.ok)throw new Error("not_found");
@@ -48,5 +50,5 @@ async function load(){
 }
 load().catch(()=>{
   statusEl.className="brief-loading brief-error";
-  statusEl.innerHTML='周报加载失败。<br><a href="../#archive">返回周报库</a>';
+  statusEl.innerHTML='周报加载失败。<br><a href="../reports.html#archive">返回周报库</a>';
 });
