@@ -29,5 +29,6 @@
 - `weekly/YYYY-MM-DD.json`：结构化周报数据
 - `weekly/view.html`：周报阅读器
 
-当前一期：[`2026-10-02`](weekly/view.html?week=2026-10-02)
+当前一期：[`2026-10-16`](weekly/view.html?week=2026-10-16)
+
 

@@ -105,7 +105,7 @@ function setupProgress(papers){
 
 async function load(){
  const requestedWeek=new URLSearchParams(location.search).get("week");if(requestedWeek&&!/^\d{4}-\d{2}-\d{2}$/.test(requestedWeek))throw new Error("invalid_week");
- const c=await fetch(requestedWeek?`weekly/${requestedWeek}.json`:"data/current.json?v=20261009-v1",{cache:"default"}).then(r=>{if(!r.ok)throw new Error("current_failed");return r.json()});currentWeek=c.week;
+ const c=await fetch(requestedWeek?`weekly/${requestedWeek}.json`:"data/current.json?v=20261016-v1",{cache:"default"}).then(r=>{if(!r.ok)throw new Error("current_failed");return r.json()});currentWeek=c.week;
  document.querySelector(".topbar").innerHTML=headerNav();
  const groups=[["P0","主线必读","直接连接研究主线"],["P1","方法迁移","把其他领域的方法带回你的问题"],["P2","视野拓展","值得保留的新方向与技术能力"]];
  document.querySelector("#app").innerHTML=`<header class="module-heading" id="papers"><div><p class="eyebrow">01 / PAPER SUMMARIES</p><h1>论文总结</h1><p>先看研究问题与推荐理由，再逐篇深入方法、实验和边界。</p></div><div class="module-meta"><span>${esc(c.week)}</span><b>${c.papers.length} 篇论文</b><a href="reports.html">选择其他周次 →</a></div></header>
@@ -117,7 +117,7 @@ async function load(){
 function archiveRows(items){return items.map(x=>`<div class="archive-row"><a class="archive-main" href="${safeUrl(new URL(x.file,location.href).href)}"><span class="archive-date">${esc(x.week)}</span><b>${esc(x.label)}</b><span>${esc(x.total)} 篇</span><em aria-hidden="true">↗</em></a><a class="archive-catalog" href="papers.html?week=${encodeURIComponent(x.week)}#papers">本期论文 →</a></div>`).join("")}
 async function loadReports(){
  document.querySelector(".topbar").innerHTML=headerNav();
- const [c,a]=await Promise.all([fetch("data/current.json?v=20261009-v1").then(r=>{if(!r.ok)throw new Error();return r.json()}),fetch("data/archive.json?v=20261009-v1").then(r=>{if(!r.ok)throw new Error();return r.json()})]);
+ const [c,a]=await Promise.all([fetch("data/current.json?v=20261016-v1").then(r=>{if(!r.ok)throw new Error();return r.json()}),fetch("data/archive.json?v=20261016-v1").then(r=>{if(!r.ok)throw new Error();return r.json()})]);
  document.querySelector("#app").innerHTML=`<header class="module-heading"><div><p class="eyebrow">02 / WEEKLY REPORTS</p><h1>每周周报</h1><p>按周整理研究判断、阅读路线与下一步行动。</p></div><span class="module-count">${a.length} 期归档</span></header>
  <section class="current-report"><div class="report-date"><span>最新一期</span><b>${esc(c.week)}</b><small>${c.papers.length} 篇推荐文献</small></div><div class="report-copy"><p class="eyebrow">${esc(c.label.split(" · ")[0])}</p><h2>${esc(c.label.includes(" · ")?c.label.split(" · ").slice(1).join(" · "):c.label)}</h2><p>${esc(c.purpose)}</p><div class="report-links"><a class="primary-link" href="weekly/view.html?week=${encodeURIComponent(c.week)}">阅读本期周报 ↗</a><a href="papers.html?week=${encodeURIComponent(c.week)}">查看本期论文 →</a></div></div></section>
  <section class="archive-panel" id="archive"><div class="section-head"><h2>全部周报</h2><p>每一期都是独立的研究记录</p></div><div class="archive" id="archive-list">${archiveRows(a)}</div></section>${moduleFooter()}`;restoreAnchor();
@@ -125,7 +125,7 @@ async function loadReports(){
 async function loadFrontiers(){
  document.querySelector(".topbar").innerHTML=headerNav();
  const data=await fetch("data/frontiers.json",{cache:"no-store"}).then(r=>{if(!r.ok)throw new Error("frontiers_failed");return r.json()});
- const items=data.items||[];let knownPapers=[];try{const current=await fetch("data/current.json?v=20261009-v1").then(r=>r.ok?r.json():null);knownPapers=(current?.papers||[]).map(p=>({url:p.url,week:current.week}))}catch{}
+ const items=data.items||[];let knownPapers=[];try{const current=await fetch("data/current.json?v=20261016-v1").then(r=>r.ok?r.json():null);knownPapers=(current?.papers||[]).map(p=>({url:p.url,week:current.week}))}catch{}
  const kindLabels={toolrelease:"工具发布",dataset:"数据更新",preprint:"研究预印本",benchmark:"基准与复现"};
  document.querySelector("#app").innerHTML=`<header class="module-heading"><div><p class="eyebrow">03 / RESEARCH FRONTIERS</p><h1>研究前沿</h1><p>关注方法、工具与研究生态的新变化。</p></div><div class="module-meta"><span>来源核验</span><b>${esc(data.checked_at||data.updated_at||"")}</b></div></header>
  <div class="frontier-scope"><b>这份动态的范围</b><p>${esc(data.scope_note||"")}</p></div><section class="frontier-list" aria-label="研究前沿动态">${items.map((item,i)=>`<article class="frontier-card" id="frontier-${esc(item.id||i)}"><div class="frontier-index">${String(i+1).padStart(2,"0")}</div><div class="frontier-body"><div class="frontier-meta"><span>${esc(kindLabels[item.kind]||"研究动态")}</span><span class="frontier-date"><time datetime="${esc(item.date||"")}">${esc(item.date||"")}</time><small>${esc(item.date_label||"")}</small></span></div><h2>${esc(item.title)}</h2>${paragraphs(item.summary)}${item.why_it_matters?`<div class="frontier-why"><b>为什么值得关注</b>${paragraphs(item.why_it_matters)}</div>`:""}${item.action?`<div class="frontier-action"><b>可试一步 · 建议</b><p>${esc(item.action)}</p></div>`:""}${item.limitations?`<p class="frontier-limit"><b>边界 / 状态</b> ${esc(Array.isArray(item.limitations)?item.limitations.join("；"):item.limitations)}</p>`:""}<div class="frontier-sources"><span>来源</span>${(item.sources||[]).map(source=>sourceLink(source.url,source.label||"原始来源")).join("")}</div>${item.related_paper_url?(()=>{const known=knownPapers.find(p=>p.url===item.related_paper_url);return `<div class="related-paper">${known?`<a href="${guideUrl({url:known.url},known.week)}">阅读相关论文讲解 →</a>`:sourceLink(item.related_paper_url,"相关研究原文")}</div>`})():""}</div></article>`).join("")}</section>${moduleFooter()}`;restoreAnchor();
@@ -149,3 +149,4 @@ async function loadPaper(){
  setupProgress(c.papers);restoreAnchor();
 }
 ({paper:loadPaper,papers:load,reports:loadReports,frontiers:loadFrontiers}[document.body.dataset.view]||load)().catch(()=>{document.querySelector("#app").innerHTML='<div class="empty-state"><h1>内容暂时无法载入</h1><p>请检查链接中的周报日期，或稍后刷新重试。</p><a href="hub.html">返回功能选择 →</a></div>'});
+

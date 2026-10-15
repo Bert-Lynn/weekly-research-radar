@@ -1,5 +1,14 @@
 [
   {
+    "week": "2026-10-16",
+    "label": "Week 05 · 信息边界与有效比较",
+    "file": "weekly/view.html?week=2026-10-16",
+    "must_read": 2,
+    "total": 6,
+    "source_file": "weekly/2026-10-16.md",
+    "data_file": "weekly/2026-10-16.json"
+  },
+  {
     "week": "2026-10-09",
     "label": "Week 04 · 可靠性与滚动决策",
     "file": "weekly/view.html?week=2026-10-09",
